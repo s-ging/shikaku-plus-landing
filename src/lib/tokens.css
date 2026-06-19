@@ -1,0 +1,98 @@
+/* tokens.css — design system (spec §2 + §3). Dark is the brand default. */
+
+:root {
+	/* —— Backgrounds / surfaces —— */
+	--bg: #1b1b1b; /* scaffold / page background */
+	--appbar-bg: #1b1b1b; /* top bar surface */
+	--appbar-fg: #ffffff; /* top bar icons + title */
+	--cell: #37311f; /* empty grid cell */
+
+	/* —— Interactive / buttons —— */
+	--button-fill: #d0b878; /* primary button bg (amber) */
+	--button-label: #ffffff; /* primary button text */
+	--chip-sel-fill: #d0b878; /* selected chip bg */
+	--chip-unsel-fill: #2f2e2a; /* unselected chip bg */
+	--chip-label: #ffffff; /* chip text (unselected) */
+	--chip-sel-label: #1b1b1b; /* chip text (selected) */
+
+	/* —— Typography —— */
+	--text-primary: #ffffff; /* all headings / body */
+	--text-secondary: rgba(255, 255, 255, 0.7); /* bodyStyle = textPrimary @ 70% */
+
+	/* —— Board / game state —— */
+	--num: #ffffff; /* clue number on empty cell */
+	--num-on-block: rgba(0, 0, 0, 0.35); /* clue number on a filled block */
+	--num-anchor: #6a8aaa; /* clue on a Hokan anchor (unused in Zen) */
+	--drag-fill: rgba(68, 136, 255, 0.33); /* drag preview fill */
+	--drag-stroke: #4488ff; /* drag preview border */
+	--invalid-fill: rgba(255, 85, 85, 0.4); /* invalid placement fill */
+	--invalid-stroke: #ff5555; /* invalid placement border */
+
+	/* —— Solved overlay —— */
+	--solved-overlay: rgba(26, 26, 46, 0.87);
+	--solved-text: #ffffff;
+
+	/* —— Drag label pill —— */
+	--pill-fill: rgba(68, 136, 255, 0.33);
+	--pill-text: #ffffff;
+
+	/* —— Geometry —— */
+	--radius: 4px; /* kRadius — the ONE radius used everywhere */
+	--cell-gap: 5px; /* kCellGap — gap between cells */
+	--grid-padding: 16px; /* kGridPadding */
+	--max-board: 550px; /* kMaxBoardSize */
+	--max-content: 420px; /* max centered content width */
+
+	/* —— Fonts —— */
+	--font-ui: 'Shippori Antique B1', system-ui, sans-serif; /* global UI font */
+	--font-brand: 'Shippori Mincho B1', serif; /* brand display only */
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--bg: #f2ede4;
+		--appbar-bg: #eae4da;
+		--appbar-fg: #1a1605;
+		--cell: #e0d8c8;
+		--button-fill: #b89050;
+		--button-label: #ffffff;
+		--chip-sel-fill: #b89050;
+		--chip-unsel-fill: #ddd8ce;
+		--chip-label: #1a1605;
+		--chip-sel-label: #1a1605;
+		--text-primary: #1a1605;
+		--text-secondary: rgba(26, 22, 5, 0.7);
+		--num: #1a1605;
+		--num-on-block: rgba(255, 255, 255, 0.71);
+		--num-anchor: #4a6a8a;
+		--drag-fill: rgba(51, 102, 204, 0.2);
+		--drag-stroke: #3366cc;
+		--invalid-fill: rgba(255, 68, 68, 0.27);
+		--invalid-stroke: #cc3333;
+		--solved-overlay: rgba(240, 235, 224, 0.93);
+		--solved-text: #1a1605;
+		--pill-fill: #1a1605;
+		--pill-text: #d0b878;
+	}
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden; /* safety net: a stray sub-pixel can never shift the page */
+}
+
+body {
+	font-family: var(--font-ui);
+	color: var(--text-primary);
+	background: var(--bg);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
