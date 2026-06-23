@@ -371,7 +371,7 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 16px;
-		align-items: start;
+		align-items: stretch;
 	}
 	.left-col {
 		display: flex;
@@ -382,6 +382,10 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
+	}
+	/* Right column fills the row height; its two cards share it equally. */
+	.right-col > :global(*) {
+		flex: 1;
 	}
 	.footer {
 		padding-top: 64px;
