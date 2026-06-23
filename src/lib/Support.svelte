@@ -66,18 +66,15 @@
 	});
 </script>
 
-<div class="bento">
-	<!-- Left column: funding tile + tier tiles -->
+<div class="support-grid">
+	<!-- Left: progress bar + tiers -->
 	<div class="col">
-		<!-- Funding tile -->
-		<section class="tile fund-tile">
-			<header class="tile-head">
-				<h2 class="tile-title">Support Us</h2>
-				<span class="tile-amt">
-					${Math.round($shown).toLocaleString('en-US')}
-					<span class="tile-amt-goal">/ ${maxAmount.toLocaleString('en-US')}</span>
-				</span>
-			</header>
+		<h2 class="heading">Support Us</h2>
+		<div class="card">
+			<div class="raised-row">
+				<p class="raised-line">${Math.round($shown).toLocaleString('en-US')} raised</p>
+				<p class="goal-line">of ${maxAmount.toLocaleString('en-US')} goal</p>
+			</div>
 
 			<!-- Horizontal progress bar; tier ticks sit at amount/maxAmount along it -->
 			<div class="bar" aria-hidden="true">
@@ -101,41 +98,40 @@
 				</div>
 			</div>
 
-			<button class="support-btn" onclick={onsupport}>Support the project</button>
-		</section>
-
-		<!-- Tier tiles (priority order, high → low) -->
-		<ol class="tiers">
-			{#each tiers as t (t.amount)}
-				{@const unlocked = raised >= t.amount}
-				<li class="tile tier" class:unlocked>
-					<div class="tier-head">
+			<!-- Tier detail list (priority order, high → low) -->
+			<ol class="tiers">
+				{#each tiers as t (t.amount)}
+					{@const unlocked = raised >= t.amount}
+					<li class="tier" class:unlocked>
 						<span class="tier-amt">${t.amount}</span>
-						<span class="title">{t.title}</span>
-						<span class="badge" class:badge-unlocked={unlocked}>
-							{#if unlocked}<span class="check-icon">{@html checkIcon}</span>{/if}
-							{unlocked ? 'Unlocked' : 'Locked'}
-						</span>
-					</div>
-					<div class="detail">{t.detail}</div>
-				</li>
-			{/each}
-		</ol>
+						<div class="body">
+							<div class="tier-header">
+								<span class="title">{t.title}</span>
+								<span class="badge" class:badge-unlocked={unlocked}>
+									{#if unlocked}<span class="check-icon">{@html checkIcon}</span>{/if}
+									{unlocked ? 'Unlocked' : 'Locked'}
+								</span>
+							</div>
+							<div class="detail">{t.detail}</div>
+						</div>
+					</li>
+				{/each}
+			</ol>
+
+			<button class="support-btn" onclick={onsupport}>Support the project</button>
+		</div>
 	</div>
 
-	<!-- Right column: rewards tile + countdown tile -->
+	<!-- Right: badge rewards -->
 	<div class="col">
-		<!-- Rewards tile -->
-		<section class="tile rewards-tile">
-			<header class="tile-head">
-				<h2 class="tile-title">Your support, rewarded</h2>
-			</header>
+		<h2 class="heading">Your support, rewarded</h2>
+		<div class="card rewards-card">
 			<p class="blurb">
 				Get an exclusive early supporter badge when you support the game. This badge will be visible
 				in public rooms, Help Me! and Let Me Help!, and (soon) in Shikaku+ VS!
 			</p>
 			<div class="badge-list">
-				{#each badges as b (b.name)}
+				{#each badges as b}
 					<div class="badge-row">
 						<div class="badge-icon">{@html b.svg}</div>
 						<div class="badge-info">
@@ -149,130 +145,177 @@
 				These badges are minted once and never again — once the Foundation period closes, there's no
 				way to get them.
 			</p>
-		</section>
+		</div>
 
-		<!-- Countdown tile -->
-		<section class="tile deadline-tile" class:ended>
-			<header class="tile-head">
-				<h2 class="tile-title">
-					{ended ? 'Foundation has ended' : 'Early support ends in'}
-				</h2>
-			</header>
-			{#if ended}
-				<p class="deadline-ended">
-					Thank you to everyone who supported during the Foundation period.
-				</p>
-			{:else}
-				<div class="countdown" role="timer" aria-label="Time remaining until the Foundation fundraiser ends">
-					<div class="seg">
-						<span class="num">{pad(countdown.days)}</span>
-						<span class="unit">days</span>
+		<!-- Countdown: the Foundation period is winding down -->
+		<div class="deadline-section">
+			<div class="card deadline-card" class:ended>
+				{#if ended}
+					<div class="deadline-ended">
+						Foundation has ended — thank you to everyone who supported.
 					</div>
-					<div class="seg">
-						<span class="num">{pad(countdown.hours)}</span>
-						<span class="unit">hrs</span>
+				{:else}
+					<div class="deadline-label">Early support ends in</div>
+					<div class="countdown" role="timer" aria-label="Time remaining until the Foundation fundraiser ends">
+						<div class="seg">
+							<span class="num">{pad(countdown.days)}</span>
+							<span class="unit">days</span>
+						</div>
+						<span class="colon" aria-hidden="true">:</span>
+						<div class="seg">
+							<span class="num">{pad(countdown.hours)}</span>
+							<span class="unit">hours</span>
+						</div>
+						<span class="colon" aria-hidden="true">:</span>
+						<div class="seg">
+							<span class="num">{pad(countdown.minutes)}</span>
+							<span class="unit">minutes</span>
+						</div>
+						<span class="colon" aria-hidden="true">:</span>
+						<div class="seg">
+							<span class="num">{pad(countdown.seconds)}</span>
+							<span class="unit">seconds</span>
+						</div>
 					</div>
-					<div class="seg">
-						<span class="num">{pad(countdown.minutes)}</span>
-						<span class="unit">min</span>
+					<div class="footnote text-center">
+						The Foundation fundraiser wraps up at the end of August 2026. Support before then to lock
+						in your tier rewards and exclusive badge.
 					</div>
-					<div class="seg">
-						<span class="num">{pad(countdown.seconds)}</span>
-						<span class="unit">sec</span>
-					</div>
-				</div>
-				<p class="footnote text-center">
-					The Foundation fundraiser wraps up at the end of August 2026. Support before then to lock
-					in your tier rewards and exclusive badge.
-				</p>
-			{/if}
-		</section>
+				{/if}
+			</div>
+		</div>
 	</div>
 </div>
 
 <style>
-	/* —— Bento geometry, drawn from the in-game grid grammar (tokens.css) ——
-	   The board uses a soft ~12% tile radius, 5px cell gaps, 16px grid padding.
-	   We echo that here: tiles get a game-tile radius, chips the global 4px,
-	   and every gap/pad is one of two units so the whole section feels like a
-	   board of nested tiles. */
-	.bento {
-		--tile-radius: 12px;     /* big container — echoes the board's tile corner */
-		--chip-radius: var(--radius); /* 4px — small chrome (badges, button, bar) */
-		--tile-pad: var(--grid-padding); /* 16px — interior padding everywhere */
-		--tile-gap: var(--grid-padding); /* 16px — gap between tiles */
-		--inner-gap: 10px;       /* gap inside a tile */
-
+	.support-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: var(--tile-gap);
+		gap: clamp(28px, 5vw, 64px);
 		align-items: start;
 	}
-	.col {
-		display: flex;
-		flex-direction: column;
-		gap: var(--tile-gap);
-		min-width: 0;
-	}
 
-	/* —— Tile: the one container primitive —— */
-	.tile {
-		background: color-mix(in srgb, var(--text-primary) 5%, transparent);
-		border: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
-		border-radius: var(--tile-radius);
-		padding: var(--tile-pad);
-		display: flex;
-		flex-direction: column;
-		gap: var(--inner-gap);
-	}
-	.tile-head {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 12px;
-		flex-wrap: wrap;
-	}
-	.tile-title {
-		font-family: var(--font-ui);
-		font-size: 18px;
-		font-weight: normal;
-		letter-spacing: -0.5px;
-		color: var(--text-primary);
-		margin: 0;
-	}
-
-	/* —— Funding tile —— */
-	.tile-amt {
+	/* Total raised, sits at the top of the box */
+	.raised-line {
+		margin: 0 0 20px;
 		font-size: 18px;
 		font-weight: 700;
 		color: var(--text-primary);
 		letter-spacing: -0.3px;
+	}
+
+	/* —— Countdown section —— */
+	.deadline-section {
+		margin-top: 20px;
+	}
+	.deadline-card {
+		align-items: center;
+		gap: 14px;
+		padding: 22px 24px;
+	}
+	.deadline-label {
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.8px;
+		color: var(--text-secondary);
+	}
+	.countdown {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
 		font-variant-numeric: tabular-nums;
 	}
-	.tile-amt-goal {
-		font-size: 13px;
+	.seg {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		min-width: 44px;
+	}
+	.num {
+		font-size: 32px;
+		font-weight: 700;
+		line-height: 1;
+		color: var(--text-primary);
+		letter-spacing: -0.5px;
+	}
+	.unit {
+		margin-top: 6px;
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		color: var(--text-secondary);
+	}
+	.colon {
+		font-size: 28px;
+		font-weight: 700;
+		line-height: 1;
+		color: var(--text-secondary);
+		opacity: 0.5;
+		/* nudge up so the colon centres on the numerals, not the unit labels */
+		padding-top: 2px;
+	}
+	.deadline-ended {
+		font-size: 15px;
+		font-weight: 600;
+		color: var(--text-secondary);
+		letter-spacing: -0.2px;
+		text-align: center;
+	}
+
+	.heading {
+		font-family: var(--font-ui);
+		font-size: 22px;
+		font-weight: normal;
+		letter-spacing: -0.8px;
+		color: var(--text-primary);
+		margin: 0 0 18px;
+	}
+
+	.card {
+		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
+		border-radius: var(--radius);
+		padding: 28px 28px 28px 20px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	/* —— Raised / goal header —— */
+	.raised-row {
+		display: flex;
+		align-items: baseline;
+		gap: 8px;
+		margin: 0 0 16px;
+	}
+	.goal-line {
+		margin: 0;
+		font-size: 14px;
 		font-weight: 500;
 		color: var(--text-secondary);
+		letter-spacing: -0.2px;
 	}
 
 	/* —— Horizontal progress bar —— */
 	.bar {
 		position: relative;
-		margin-top: 4px;
+		/* room below the rail for the tick marks + amount labels */
+		margin: 0 0 28px;
 	}
 	.bar-track {
 		position: relative;
-		height: 10px;
-		border-radius: var(--chip-radius);
-		background: var(--cell);
+		height: 8px;
+		border-radius: 999px;
+		background: #2B2B2B;
 	}
 	.bar-fill {
 		position: absolute;
 		left: 0;
 		top: 0;
 		bottom: 0;
-		min-width: 10px;
-		border-radius: var(--chip-radius);
+		min-width: 8px;                 /* keep the rounded cap visible at tiny values */
+		border-radius: 999px;
 		background: var(--button-fill);
 		transition: width 600ms ease;
 	}
@@ -283,15 +326,15 @@
 		right: 0;
 		width: 14px;
 		height: 14px;
-		border-radius: var(--chip-radius);
+		border-radius: 50%;
 		background: var(--button-fill);
-		transform: translate(50%, -50%) rotate(45deg); /* a little square gem, board-like */
+		transform: translate(50%, -50%);
 		box-shadow: 0 0 0 3px color-mix(in srgb, var(--button-fill) 22%, transparent);
 	}
 	.pulse {
 		position: absolute;
 		inset: 0;
-		border-radius: var(--chip-radius);
+		border-radius: 50%;
 		background: var(--button-fill);
 		pointer-events: none;
 		animation: level-pulse 1.6s ease-out infinite;
@@ -308,8 +351,7 @@
 	/* —— Tier ticks under the rail —— */
 	.bar-ticks {
 		position: relative;
-		height: 32px;
-		margin-top: 8px;
+		height: 34px;
 	}
 	.tick {
 		position: absolute;
@@ -318,13 +360,13 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 5px;
+		gap: 4px;
 		white-space: nowrap;
 	}
 	.tick-mark {
-		width: 3px;
-		height: 7px;
-		border-radius: var(--chip-radius);
+		width: 2px;
+		height: 8px;
+		border-radius: 999px;
 		background: color-mix(in srgb, var(--text-primary) 22%, transparent);
 	}
 	.tick-amt {
@@ -336,49 +378,52 @@
 	}
 	.tick.reached .tick-mark { background: var(--button-fill); }
 	.tick.reached .tick-amt  { color: var(--text-primary); opacity: 1; }
-	/* Top tier sits at 100% (right edge); pull its label left so it doesn't clip. */
+	/* The top tier sits at 100% (right edge); pull its label fully left so it
+	   doesn't overflow the card. The mark stays put via its own centering. */
 	.tick.tick-edge { transform: translateX(-100%); align-items: flex-end; }
+	.tick.tick-edge .tick-mark { margin-right: 0; }
 
-	/* —— Tier tiles —— */
 	.tiers {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		gap: var(--tile-gap);
+		gap: 18px;
 	}
+
 	.tier {
-		gap: 6px;
+		display: grid;
+		grid-template-columns: 48px 1fr;
+		gap: 0 14px;
 	}
-	.tier:not(.unlocked) { opacity: 0.62; }
-	.tier-head {
+
+	.tier-amt {
+		font-size: 14px;
+		font-weight: 700;
+		color: var(--text-primary);
+		letter-spacing: -0.3px;
+		padding-top: 2px;
+		opacity: 0.4;
+	}
+	.tier.unlocked .tier-amt { opacity: 1; }
+
+	.tier-header {
 		display: flex;
 		align-items: center;
 		gap: 8px;
 		flex-wrap: wrap;
-	}
-	.tier-amt {
-		font-size: 13px;
-		font-weight: 700;
-		color: var(--chip-sel-label);
-		background: var(--button-fill);
-		border-radius: var(--chip-radius);
-		padding: 2px 7px;
-		letter-spacing: -0.2px;
-		font-variant-numeric: tabular-nums;
-	}
-	.tier:not(.unlocked) .tier-amt {
-		color: var(--text-primary);
-		background: color-mix(in srgb, var(--text-primary) 12%, transparent);
+		margin-bottom: 3px;
 	}
 	.title {
 		font-size: 15px;
 		font-weight: 700;
 		color: var(--text-primary);
 		letter-spacing: -0.2px;
-		margin-right: auto;
 	}
+	.tier:not(.unlocked) .title,
+	.tier:not(.unlocked) .detail { opacity: 0.55; }
+
 	.badge {
 		display: inline-flex;
 		align-items: center;
@@ -386,7 +431,7 @@
 		font-size: 11px;
 		font-weight: 600;
 		padding: 2px 8px;
-		border-radius: var(--chip-radius);
+		border-radius: 999px;
 		color: var(--text-secondary);
 		background: color-mix(in srgb, var(--text-primary) 10%, transparent);
 		letter-spacing: -0.1px;
@@ -404,6 +449,7 @@
 		height: 10px;
 		fill: #88B098;
 	}
+
 	.detail {
 		font-size: 13px;
 		color: var(--text-secondary);
@@ -411,13 +457,12 @@
 		line-height: 1.5;
 	}
 
-	/* —— Support button —— */
 	.support-btn {
-		margin-top: 6px;
+		margin-top: 24px;
 		background: var(--button-fill);
 		color: var(--chip-sel-label);
 		border: none;
-		border-radius: var(--chip-radius);
+		border-radius: var(--radius);
 		padding: 14px 22px;
 		font-family: var(--font-ui);
 		font-size: 15px;
@@ -429,28 +474,27 @@
 	.support-btn:hover { filter: brightness(1.06); }
 	.support-btn:active { transform: translateY(1px); }
 
-	/* —— Rewards tile —— */
+	/* —— Rewards card —— */
+	.rewards-card {
+		display: block;
+		padding: 28px;
+	}
 	.blurb {
 		font-size: 15px;
-		line-height: 1.6;
+		line-height: 1.65;
 		color: var(--text-secondary);
 		letter-spacing: -0.2px;
-		margin: 0;
+		margin: 0 0 28px;
 	}
 	.badge-list {
 		display: flex;
 		flex-direction: column;
-		gap: var(--inner-gap);
-		margin-top: 4px;
+		gap: 20px;
 	}
-	/* each reward is its own little inset tile */
 	.badge-row {
 		display: flex;
 		align-items: center;
 		gap: 14px;
-		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
-		border-radius: var(--chip-radius);
-		padding: 10px 12px;
 	}
 	.badge-icon {
 		flex-shrink: 0;
@@ -482,52 +526,15 @@
 		color: var(--text-secondary);
 		letter-spacing: -0.1px;
 		opacity: 0.7;
-		margin: 4px 0 0;
+		margin: 24px 0 0;
 	}
-	.footnote.text-center { text-align: center; }
 
-	/* —— Countdown tile —— */
-	.countdown {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 8px;
-		font-variant-numeric: tabular-nums;
-		margin-top: 2px;
-	}
-	/* each unit is a board-like score tile */
-	.seg {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 4px;
-		background: var(--cell);
-		border-radius: var(--chip-radius);
-		padding: 12px 4px 8px;
-	}
-	.num {
-		font-size: 30px;
-		font-weight: 700;
-		line-height: 1;
-		color: var(--text-primary);
-		letter-spacing: -0.5px;
-	}
-	.unit {
-		font-size: 10px;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-		color: var(--text-secondary);
-	}
-	.deadline-ended {
-		font-size: 14px;
-		line-height: 1.55;
-		color: var(--text-secondary);
-		letter-spacing: -0.2px;
-		margin: 0;
+	.footnote.text-center {
+		text-align: center;
 	}
 
 	@media (max-width: 880px) {
-		.bento {
+		.support-grid {
 			grid-template-columns: 1fr;
 		}
 	}
