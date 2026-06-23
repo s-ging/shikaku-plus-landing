@@ -1,6 +1,6 @@
 <section class="about-hokan">
-	<h2 class="heading">About Shikaku Hokan</h2>
 	<div class="card">
+		<h2 class="heading">About Shikaku Hokan</h2>
 		<p>I thought, Shikaku was hard enough. How can we make it harder?</p>
 		<p>
 			Then, I thought about making constraints in the game, and we came up with an alternate version
@@ -25,13 +25,13 @@
 		font-weight: normal;
 		letter-spacing: -0.8px;
 		color: #6A8AAA;
-		margin: 0 0 18px;
+		margin: 0 0 16px;
 	}
 	.card {
 		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
 		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
 		border-radius: var(--radius);
-		padding: 28px 30px;
+		padding: 16px 20px;
 	}
 	.card p {
 		font-size: 16px;

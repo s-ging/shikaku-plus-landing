@@ -3,8 +3,8 @@
 </script>
 
 <section class="about">
-	<h2 class="heading">About Shikaku+</h2>
 	<div class="card">
+		<h2 class="heading">About Shikaku+</h2>
 		<p>
 			Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle,
 			Shikaku.
@@ -23,13 +23,13 @@
 		font-weight: normal;
 		letter-spacing: -0.8px;
 		color: var(--text-primary);
-		margin: 0 0 18px;
+		margin: 0 0 16px;
 	}
 	.card {
 		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
 		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
 		border-radius: var(--radius);
-		padding: 28px 30px;
+		padding: 16px 20px;
 	}
 	.card p {
 		font-size: 16px;

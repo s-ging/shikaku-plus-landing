@@ -30,8 +30,8 @@
 </script>
 
 <section class="roadmap">
-	<h2 class="heading">Roadmap</h2>
 	<div class="card">
+		<h2 class="heading">Roadmap</h2>
 		<ol class="timeline">
 			{#each items as it, i (it.version)}
 				<li class="row" class:last={i === items.length - 1}>
@@ -83,13 +83,13 @@
 		font-weight: normal;
 		letter-spacing: -0.8px;
 		color: var(--text-primary);
-		margin: 0 0 18px;
+		margin: 0 0 16px;
 	}
 	.card {
 		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
 		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
 		border-radius: var(--radius);
-		padding: 26px 30px;
+		padding: 16px 20px;
 	}
 	.timeline {
 		list-style: none;

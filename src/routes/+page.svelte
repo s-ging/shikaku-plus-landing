@@ -6,6 +6,8 @@
 	import About from '$lib/About.svelte';
 	import Roadmap from '$lib/Roadmap.svelte';
 	import Support from '$lib/Support.svelte';
+	import SupportRewards from '$lib/SupportRewards.svelte';
+	import SupportCountdown from '$lib/SupportCountdown.svelte';
 	import AboutHokan from '$lib/AboutHokan.svelte';
 	import { dailyGrid, dailySeed, dailyDateLabel } from '$lib/daily.js';
 	import { loadProgress, saveProgress, rectsFromProgress, pruneOld } from '$lib/storage.js';
@@ -161,13 +163,13 @@
 		<div class="left-col">
 			<About />
 			<AboutHokan />
+			<Support onsupport={() => (window.location.href = SUPPORT_URL)} />
 		</div>
-		<Roadmap />
-	</section>
-
-	<!-- Support -->
-	<section class="full">
-		<Support onsupport={() => (window.location.href = SUPPORT_URL)} />
+		<div class="right-col">
+			<Roadmap />
+			<SupportRewards />
+		</div>
+		<SupportCountdown />
 	</section>
 
 	<footer class="footer">
@@ -225,6 +227,9 @@
 		max-width: 1120px;
 		margin: 0 auto;
 		padding: 0 clamp(20px, 5vw, 56px) 80px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 	}
 
 	/* —— Hero —— */
@@ -365,16 +370,18 @@
 	.two-col {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: clamp(28px, 5vw, 64px);
-		padding-top: 40px;
+		gap: 16px;
+		align-items: start;
 	}
 	.left-col {
 		display: flex;
 		flex-direction: column;
-		gap: clamp(28px, 5vw, 64px);
+		gap: 16px;
 	}
-	.full {
-		padding-top: 64px;
+	.right-col {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 	}
 	.footer {
 		padding-top: 64px;
@@ -423,12 +430,21 @@
 		.daily-label {
 			justify-content: center;
 		}
+		/* Single stacked column: flatten both cols so their cards can be
+		   reordered freely, then put Roadmap above the Support Us card. */
 		.two-col {
-			grid-template-columns: 1fr;
-			gap: 44px;
+			display: flex;
+			flex-direction: column;
 		}
-		.left-col {
-			gap: 44px;
+		.left-col,
+		.right-col {
+			display: contents;
 		}
+		.two-col :global(.about)        { order: 1; }
+		.two-col :global(.about-hokan)  { order: 2; }
+		.two-col :global(.roadmap)      { order: 3; }
+		.two-col :global(.support-grid) { order: 4; }
+		.two-col :global(.rewards-card) { order: 5; }
+		.two-col :global(.deadline-card) { order: 6; }
 	}
 </style>
