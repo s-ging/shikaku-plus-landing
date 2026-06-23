@@ -10,10 +10,8 @@
 	import { dailyGrid, dailySeed, dailyDateLabel } from '$lib/daily.js';
 	import { loadProgress, saveProgress, rectsFromProgress, pruneOld } from '$lib/storage.js';
 
-	// CTA destinations are placeholders for now (see build notes).
-	const PLAY_URL = '#'; // → full Flutter web app
-	const ACCOUNT_URL = '#'; // → sign-up
-	const SUPPORT_URL = '#'; // → funding page
+	const PLAY_URL = 'https://shikaku.plus'; // → full Flutter web app
+	const SUPPORT_URL = 'https://paymongo.page/l/shikaku-plus'; // → funding page
 
 	/** @type {number[][] | null} */
 	let nums = $state(null);
@@ -22,6 +20,7 @@
 	/** @type {import('$lib/puzzle.js').Rect[]} */
 	let initialRects = $state([]);
 	let initialSolved = $state(false);
+	let solved = $state(false); // puzzle is in a solved state (restored or solved this session)
 	let showSolved = $state(false);
 	let moves = $state(0);
 	/** @type {string | null} */
@@ -43,8 +42,10 @@
 		if (p) {
 			initialRects = rectsFromProgress(p);
 			initialSolved = !!p.solved;
+			solved = initialSolved;
 			moves = initialRects.length;
-			showSolved = initialSolved;
+			// Already-solved state is restored on the board itself; don't re-pop the
+			// modal on load — only show it when the player solves during this session.
 		}
 		startTs = Date.now();
 		nums = dailyGrid(); // generate last so Board mounts with everything ready
@@ -69,7 +70,12 @@
 		const m = Math.floor(secs / 60),
 			s = secs % 60;
 		timeLabel = `${m}:${String(s).padStart(2, '0')}`;
+		solved = true;
 		showSolved = true;
+	}
+	// Clicking an already-solved board re-opens the solved modal.
+	function reopenSolved() {
+		if (solved && !showSolved) showSolved = true;
 	}
 	function scrollToBoard() {
 		boardCol?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -116,13 +122,25 @@
 			</div>
 			<div class="board-stage">
 				{#if browser && nums}
-					<Board
-						{nums}
-						{initialRects}
-						{initialSolved}
-						onchange={handleChange}
-						onsolve={handleSolve}
-					/>
+					<!-- When solved, a tap on the board re-opens the celebratory modal. -->
+					<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+					<div
+						class="board-wrap"
+						class:solved
+						onclick={reopenSolved}
+						onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && reopenSolved()}
+						role={solved && !showSolved ? 'button' : undefined}
+						tabindex={solved && !showSolved ? 0 : undefined}
+						aria-label={solved && !showSolved ? 'Show solved summary' : undefined}
+					>
+						<Board
+							{nums}
+							{initialRects}
+							{initialSolved}
+							onchange={handleChange}
+							onsolve={handleSolve}
+						/>
+					</div>
 				{:else}
 					<div class="board-skeleton" aria-hidden="true"></div>
 				{/if}
@@ -130,11 +148,11 @@
 					open={showSolved}
 					{timeLabel}
 					moveCount={moves}
-					onCreateAccount={() => (window.location.href = ACCOUNT_URL)}
 					onOpenApp={() => (window.location.href = PLAY_URL)}
 					onClose={() => (showSolved = false)}
 				/>
 			</div>
+			<p class="board-note">New puzzle every day, at 6:00 AM Philippine Time.</p>
 		</div>
 	</section>
 
@@ -153,7 +171,6 @@
 	</section>
 
 	<footer class="footer">
-		<span>New puzzle every day, at 6:00 AM Philippine Time.</span>
 		<nav class="legal-links">
 			<a href="/privacy-policy">Privacy Policy</a>
 			<span class="sep">·</span>
@@ -221,7 +238,7 @@
 	}
 	.brand {
 		font-family: var(--font-brand);
-		font-size: clamp(44px, 8vw, 76px);
+		font-size: clamp(32px, 8vw, 56px);
 		font-weight: 700;
 		letter-spacing: -0.2px;
 		line-height: 1.02;
@@ -325,12 +342,24 @@
 		max-width: var(--max-board);
 		margin: 0 auto;
 	}
+	/* A solved board is tappable to re-open the summary modal. */
+	.board-wrap.solved {
+		cursor: pointer;
+	}
 	.board-skeleton {
 		width: 100%;
 		aspect-ratio: 1 / 1;
 		max-width: var(--max-board);
 		border-radius: var(--radius);
 		background: color-mix(in srgb, var(--cell) 60%, transparent);
+	}
+	.board-note {
+		max-width: var(--max-board);
+		margin: 14px auto 0;
+		text-align: center;
+		font-size: 13px;
+		color: var(--text-secondary);
+		letter-spacing: -0.2px;
 	}
 	/* —— About + Roadmap —— */
 	.two-col {

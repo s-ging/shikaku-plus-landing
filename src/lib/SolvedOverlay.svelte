@@ -4,7 +4,6 @@
 		open = false,
 		timeLabel = null, // e.g. "2:41"
 		moveCount = null, // e.g. 7
-		onCreateAccount,
 		onOpenApp,
 		onClose
 	} = $props();
@@ -29,8 +28,7 @@
 			{/if}
 
 			<div class="cta">
-				<button class="btn btn-primary" onclick={onCreateAccount}>Create a free account</button>
-				<button class="btn btn-secondary" onclick={onOpenApp}>Open the full game</button>
+				<button class="btn btn-primary" onclick={onOpenApp}>Open the full game</button>
 			</div>
 		</div>
 	</div>
@@ -155,13 +153,5 @@
 	}
 	.btn-primary:hover {
 		filter: brightness(1.06);
-	}
-	.btn-secondary {
-		background: transparent;
-		border: 1px solid color-mix(in srgb, var(--solved-text) 55%, transparent);
-		color: var(--solved-text);
-	}
-	.btn-secondary:hover {
-		background: color-mix(in srgb, var(--solved-text) 8%, transparent);
 	}
 </style>
