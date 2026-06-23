@@ -1,42 +1,66 @@
-# sv
+# Shikaku+ — Landing Page
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Marketing / landing site for **Shikaku+**, the daily Shikaku puzzle game. Built
+with SvelteKit (Svelte 5). The page features a playable daily puzzle, a roadmap,
+and a "Support Us" funding section with a live donations bar.
 
-## Creating a project
+This is an internal repo — notes here are for us and any collaborator, not a
+public pitch.
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
+## Run
 
 ```sh
-# recreate this project
-npx sv@0.16.1 create --template minimal --types ts --add eslint --install npm shikaku-plus-landing
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
+npm install
+npm run dev          # dev server
 npm run dev -- --open
 ```
 
-## Building
-
-To create a production version of your app:
+## Other commands
 
 ```sh
-npm run build
+npm run build        # production build
+npm run preview      # preview the production build
+npm run check        # svelte-check (types + a11y + unused CSS)
+npm run lint         # eslint
+npm run test         # vitest (see src/lib/puzzle.test.js)
 ```
 
-You can preview the production build with `npm run preview`.
+## Going live — the things that aren't obvious from the code
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- **Donations bar** — [`src/lib/donations.js`](src/lib/donations.js) reads the
+  total raised from a published Google Sheet. It's currently using
+  `FALLBACK_RAISED` because `SHEET_CSV_URL` is empty. To go live, publish the
+  sheet to web as CSV and paste the URL into `SHEET_CSV_URL`. The full how-to is
+  in the comment block at the top of that file.
+
+- **CTA links** — in [`src/routes/+page.svelte`](src/routes/+page.svelte):
+  - `PLAY_URL` → `https://shikaku.plus` (the full Flutter web app; also the
+    "Open app" / "Open the full game" buttons)
+  - `SUPPORT_URL` → `https://paymongo.page/l/shikaku-plus` (the funding page)
+
+- **Daily puzzle** — [`src/lib/daily.js`](src/lib/daily.js) generates a
+  deterministic 6×6 Easy puzzle seeded by the day number. The day rolls over at
+  **06:00 Philippine Time** (UTC+8). Progress is saved to `localStorage` per
+  puzzle (see [`src/lib/storage.js`](src/lib/storage.js)).
+
+- **Support / Foundation timer** — the "Support Us" section
+  ([`src/lib/Support.svelte`](src/lib/Support.svelte)) has a hard-coded
+  Foundation deadline of **end of August 2026** and exclusive supporter badges
+  that are intentionally one-time-only. Bump the `DEADLINE` constant when that
+  changes.
+
+## Layout
+
+- `src/routes/+page.svelte` — the landing page (hero + daily board, about,
+  roadmap, support, footer)
+- `src/routes/{privacy-policy,terms-of-service,data-deletion}/` — legal pages
+- `src/lib/*.svelte` — page sections (`Board`, `Support`, `Roadmap`, `About`, …)
+- `src/lib/{daily,puzzle,game,storage,donations}.js` — puzzle + funding logic
+- `src/lib/tokens.css` — the design system (colors, the single `--radius`, board
+  geometry). Match new UI to these.
+
+## Deploy
+
+Uses `@sveltejs/adapter-auto`, which picks an adapter based on the host (Vercel,
+Netlify, etc.). If deploying somewhere it can't detect, install and configure the
+matching [SvelteKit adapter](https://svelte.dev/docs/kit/adapters).

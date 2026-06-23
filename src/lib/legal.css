@@ -1,6 +1,11 @@
-/* Shared styles for legal pages (privacy-policy, terms-of-service, data-deletion). */
+/* Shared styles for legal pages (privacy-policy, terms-of-service, data-deletion).
+   NOTE: this file is @imported into Svelte <style> blocks, which means Svelte
+   does NOT scope it — every rule here is GLOBAL. So every selector is namespaced
+   under `.legal-page` to guarantee these styles can never leak onto other routes
+   (e.g. the landing page, which also has `main`, `.topbar`, `.footer`, `.sep`).
+   The legal route roots add `class="legal-page"` to their top element. */
 
-.back-to-top {
+.legal-page .back-to-top {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
@@ -16,16 +21,16 @@
 	cursor: pointer;
 	transition: border-color 120ms ease, color 120ms ease;
 }
-.back-to-top:hover {
+.legal-page .back-to-top:hover {
 	border-color: color-mix(in srgb, var(--text-primary) 35%, transparent);
 	color: var(--text-primary);
 }
-.back-to-top:focus-visible {
+.legal-page .back-to-top:focus-visible {
 	outline: 2px solid var(--button-fill);
 	outline-offset: 3px;
 }
 
-.breadcrumb {
+.legal-page .breadcrumb {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -34,27 +39,27 @@
 	letter-spacing: -0.1px;
 	margin-bottom: 32px;
 }
-.breadcrumb a {
+.legal-page .breadcrumb a {
 	color: var(--text-secondary);
 	text-decoration: none;
 }
-.breadcrumb a:hover {
+.legal-page .breadcrumb a:hover {
 	color: var(--text-primary);
 }
-.breadcrumb-sep {
+.legal-page .breadcrumb-sep {
 	opacity: 0.4;
 }
-.breadcrumb-current {
+.legal-page .breadcrumb-current {
 	color: var(--text-primary);
 }
 
-.topbar {
+.legal-page .topbar {
 	display: flex;
 	align-items: center;
 	padding: 18px clamp(20px, 5vw, 56px);
 	background: var(--appbar-bg);
 }
-.wordmark {
+.legal-page .wordmark {
 	font-family: var(--font-brand);
 	font-size: 22px;
 	font-weight: 700;
@@ -63,13 +68,13 @@
 	text-decoration: none;
 }
 
-main {
+.legal-page main {
 	max-width: 720px;
 	margin: 0 auto;
 	padding: clamp(40px, 6vh, 72px) clamp(20px, 5vw, 56px) 80px;
 }
 
-.doc h1 {
+.legal-page .doc h1 {
 	font-family: var(--font-brand);
 	font-size: clamp(28px, 5vw, 40px);
 	font-weight: 700;
@@ -79,7 +84,7 @@ main {
 	color: var(--text-primary);
 }
 
-.doc h2 {
+.legal-page .doc h2 {
 	font-family: var(--font-ui);
 	font-size: 18px;
 	font-weight: 700;
@@ -88,8 +93,8 @@ main {
 	margin: 40px 0 10px;
 }
 
-.doc p,
-.doc li {
+.legal-page .doc p,
+.legal-page .doc li {
 	font-size: 15px;
 	line-height: 1.75;
 	color: var(--text-secondary);
@@ -97,30 +102,30 @@ main {
 	margin: 0 0 12px;
 }
 
-.doc .lead {
+.legal-page .doc .lead {
 	font-size: 15px;
 	color: var(--text-secondary);
 	margin-bottom: 10px;
 }
 
-.doc ul {
+.legal-page .doc ul {
 	padding-left: 20px;
 	margin: 0 0 12px;
 }
 
-.doc ul li {
+.legal-page .doc ul li {
 	margin-bottom: 4px;
 }
 
-.doc a {
+.legal-page .doc a {
 	color: var(--button-fill);
 	text-decoration: none;
 }
-.doc a:hover {
+.legal-page .doc a:hover {
 	text-decoration: underline;
 }
 
-.footer {
+.legal-page .footer {
 	margin-top: 64px;
 	padding-top: 24px;
 	border-top: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent);
@@ -131,13 +136,13 @@ main {
 	gap: 10px;
 	align-items: center;
 }
-.footer a {
+.legal-page .footer a {
 	color: var(--text-secondary);
 	text-decoration: none;
 }
-.footer a:hover {
+.legal-page .footer a:hover {
 	color: var(--text-primary);
 }
-.sep {
+.legal-page .sep {
 	opacity: 0.4;
 }

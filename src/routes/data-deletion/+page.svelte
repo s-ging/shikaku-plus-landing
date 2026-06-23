@@ -7,6 +7,7 @@
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
+<div class="legal-page">
 <header class="topbar">
 	<a class="wordmark" href="/">Shikaku+</a>
 </header>
@@ -74,6 +75,7 @@
 		<a href="/terms-of-service">Terms of Service</a>
 	</footer>
 </main>
+</div>
 
 <style>
 	@import '$lib/legal.css';
