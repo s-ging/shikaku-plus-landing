@@ -78,6 +78,24 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Shikaku+ — Complete squares with friends</title>
+	<meta
+		name="description"
+		content="Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today."
+	/>
+	<meta property="og:title" content="Shikaku+ — Complete squares with friends" />
+	<meta
+		property="og:description"
+		content="Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today."
+	/>
+	<meta name="twitter:title" content="Shikaku+ — Complete squares with friends" />
+	<meta
+		name="twitter:description"
+		content="Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today."
+	/>
+</svelte:head>
+
 <header class="topbar" class:visible={navVisible}>
 	<a class="wordmark" href="/">Shikaku+</a>
 	<a class="open-app" href={PLAY_URL}>Open app</a>

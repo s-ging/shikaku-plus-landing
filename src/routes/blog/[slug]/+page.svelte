@@ -7,6 +7,11 @@
 <svelte:head>
 	<title>{data.post.title} · Shikaku+</title>
 	{#if data.post.excerpt}<meta name="description" content={data.post.excerpt} />{/if}
+	<meta property="og:title" content={data.post.title} />
+	{#if data.post.excerpt}<meta property="og:description" content={data.post.excerpt} />{/if}
+	<meta property="og:type" content="article" />
+	<meta name="twitter:title" content={data.post.title} />
+	{#if data.post.excerpt}<meta name="twitter:description" content={data.post.excerpt} />{/if}
 </svelte:head>
 
 <main class="wrap">
