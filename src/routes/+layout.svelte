@@ -1,7 +1,21 @@
 <script lang="ts">
 	import '$lib/tokens.css';
+	import { onMount } from 'svelte';
+	import { invalidate } from '$app/navigation';
 
-	let { children } = $props();
+	let { children, data } = $props();
+
+	// Keep server + client in sync: when the auth session changes (login/logout),
+	// re-run the loads that depend on it.
+	onMount(() => {
+		if (!data.supabase) return;
+		const {
+			data: { subscription }
+		} = data.supabase.auth.onAuthStateChange((_event, newSession) => {
+			if (newSession?.expires_at !== data.session?.expires_at) invalidate('supabase:auth');
+		});
+		return () => subscription.unsubscribe();
+	});
 </script>
 
 <svelte:head>

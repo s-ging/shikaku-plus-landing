@@ -9,7 +9,7 @@
 		{ amount: 500, title: 'Full client-side customization', detail: 'A separate add-on to the game where you can customize the full Shikaku experience.' },
 		{ amount: 300, title: 'Replay System',                  detail: `Advanced playback controls of your games, and your friend's games! See how they look at… squares! Or something.` },
 		{ amount: 200, title: 'Friend System',                  detail: `For a game so geared towards friendship and love, we'd want to give you a robust backend to make sure you share your best clears.` },
-		{ amount: 100, title: 'iOS App Store Launch',           detail: 'Unlocking the iOS App Store launch allows for even more of your friends to enjoy Shikaku+ anywhere.' },
+		{ amount: 100, title: 'iOS App Store Launch',           detail: 'Unlocking the iOS App Store launch allows for even more of your friends to enjoy Shikaku+ anywhere. (Covers Apple’s $99/year developer fee.)' },
 		{ amount: 25,  title: 'Google Play Store launch',       detail: 'We all have to start somewhere, and Google Play kicks things off for our mobile takeover.' }
 	];
 
