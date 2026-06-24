@@ -3,6 +3,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import { raised as raisedStore, FALLBACK_RAISED } from '$lib/donations.js';
 	import checkIcon from '$lib/assets/icons/check.svg?raw';
+	import SupportPayments from '$lib/SupportPayments.svelte';
 
 	const tiers = [
 		{ amount: 500, title: 'Full client-side customization', detail: 'A separate add-on to the game where you can customize the full Shikaku experience.' },
@@ -11,8 +12,6 @@
 		{ amount: 100, title: 'iOS App Store Launch',           detail: 'Unlocking the iOS App Store launch allows for even more of your friends to enjoy Shikaku+ anywhere.' },
 		{ amount: 25,  title: 'Google Play Store launch',       detail: 'We all have to start somewhere, and Google Play kicks things off for our mobile takeover.' }
 	];
-
-	let { onsupport } = $props();
 
 	// —— Funding state ——
 	// `raised` comes live from the donations sheet (see $lib/donations.js).
@@ -81,7 +80,7 @@
 			{/each}
 		</ol>
 
-		<button class="support-btn" onclick={onsupport}>Support the project</button>
+		<SupportPayments />
 	</div>
 </div>
 
@@ -294,23 +293,6 @@
 		letter-spacing: -0.2px;
 		line-height: 1.5;
 	}
-
-	.support-btn {
-		margin-top: 24px;
-		background: var(--button-fill);
-		color: var(--chip-sel-label);
-		border: none;
-		border-radius: var(--radius);
-		padding: 14px 22px;
-		font-family: var(--font-ui);
-		font-size: 15px;
-		letter-spacing: -0.3px;
-		cursor: pointer;
-		transition: filter 120ms ease, transform 80ms ease;
-		width: 100%;
-	}
-	.support-btn:hover { filter: brightness(1.06); }
-	.support-btn:active { transform: translateY(1px); }
 
 	@media (max-width: 880px) {
 		.support-grid {

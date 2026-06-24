@@ -1,41 +1,31 @@
 // donations.js — live "amount raised" feed for the support thermometer.
 //
-// ─────────────────────────────────────────────────────────────────────────────
-// HOW TO GO LIVE
-// 1. Make a Google Sheet. Put donation amounts down column A (one per row).
-//    A header in row 1 (e.g. "amount") is fine — non-numeric cells are ignored.
-//    A single-cell sheet holding just the running total also works (it's a
-//    sum of one number).
-// 2. File → Share → Publish to web → choose the sheet → CSV → Publish.
-//    Copy the URL — it looks like:
-//      https://docs.google.com/spreadsheets/d/e/<long-id>/pub?gid=0&single=true&output=csv
-// 3. Paste it into SHEET_CSV_URL below.
+// PRIMARY: Supabase Realtime. The four payment webhooks (see
+// src/routes/api/webhooks/*) upsert rows into the `donations` table; this store
+// loads the running total once, then subscribes to INSERTs so the bar ticks up
+// the instant money lands — no polling, no refresh.
 //
-// Until SHEET_CSV_URL is set, the bar shows FALLBACK_RAISED so nothing breaks.
+// FALLBACK: if Supabase env vars aren't set, it falls back to the old
+// publish-a-Google-Sheet-as-CSV behaviour (poll + refetch on focus), and if
+// neither is configured it just shows FALLBACK_RAISED so nothing breaks.
 //
-// Feeding the sheet automatically (the "I donate → number goes up" half):
-//   - Manual: type the new total / append a row. The page picks it up within
-//     POLL_MS, and instantly when the tab regains focus.
-//   - Automatic: point your payment provider's webhook (Ko-fi, Stripe, BMC, …)
-//     at a Google Apps Script / Zapier that appends the amount as a new row.
-//     This file doesn't need to change — it just reads the column total.
-// ─────────────────────────────────────────────────────────────────────────────
-
+// Configure (in .env — see .env.example):
+//   PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY
 import { readable } from 'svelte/store';
 import { browser } from '$app/environment';
+import { env } from '$env/dynamic/public';
 
-/** Published-to-web CSV URL for the donations sheet. Empty = use fallback. */
+/** Legacy: published-to-web CSV URL for a donations sheet. Empty = unused. */
 const SHEET_CSV_URL = '';
 
-/** Re-fetch interval while the page is open. */
+/** Re-fetch interval for the CSV fallback path. */
 const POLL_MS = 30_000;
 
-/** Shown before the first successful fetch, or if the sheet is unreachable. */
+/** Shown before the first load, or if nothing is configured. */
 export const FALLBACK_RAISED = 25;
 
 /**
- * Sum the numeric values in column A of a CSV string.
- * Strips currency symbols / thousands separators; skips header / blank cells.
+ * Sum the numeric values in column A of a CSV string (legacy fallback path).
  * @param {string} csv
  * @returns {number}
  */
@@ -50,40 +40,73 @@ export function parseRaised(csv) {
 }
 
 /**
- * Live store of the total amount raised (USD). Polls the sheet on an interval
- * and refetches immediately whenever the tab regains focus — so coming back
- * from a donation flow shows the updated number right away.
+ * Live store of the total amount raised (USD).
  * @type {import('svelte/store').Readable<number>}
  */
 export const raised = readable(FALLBACK_RAISED, (set) => {
-	// No fetching during SSR or before the sheet is configured.
-	if (!browser || !SHEET_CSV_URL) return;
+	if (!browser) return;
 
-	let stopped = false;
+	const SUPA_URL = env.PUBLIC_SUPABASE_URL;
+	const SUPA_KEY = env.PUBLIC_SUPABASE_ANON_KEY;
 
-	async function load() {
-		try {
-			const res = await fetch(SHEET_CSV_URL, { cache: 'no-store' });
-			if (!res.ok) return; // keep last good value
-			const total = parseRaised(await res.text());
-			if (!stopped && Number.isFinite(total)) set(total);
-		} catch {
-			/* network blip — keep the last value */
-		}
+	// —— Primary: Supabase Realtime ——
+	if (SUPA_URL && SUPA_KEY) {
+		let cleanup = () => {};
+		let cancelled = false;
+
+		(async () => {
+			const { createClient } = await import('@supabase/supabase-js');
+			if (cancelled) return;
+			const supabase = createClient(SUPA_URL, SUPA_KEY, { auth: { persistSession: false } });
+
+			// Sum only CONFIRMED donations (pending Wise/PayPal credits don't count
+			// until you tick them). Re-reading the sum on *any* table change keeps
+			// the bar correct through inserts, confirm-flips, edits and deletes.
+			async function refresh() {
+				const { data } = await supabase.from('donations').select('usd_amount').eq('confirmed', true);
+				if (!cancelled) set((data ?? []).reduce((s, r) => s + Number(r.usd_amount ?? 0), 0));
+			}
+			await refresh();
+
+			const channel = supabase
+				.channel('donations-feed')
+				.on('postgres_changes', { event: '*', schema: 'public', table: 'donations' }, refresh)
+				.subscribe();
+
+			cleanup = () => supabase.removeChannel(channel);
+		})();
+
+		return () => {
+			cancelled = true;
+			cleanup();
+		};
 	}
 
-	load();
-	const id = setInterval(load, POLL_MS);
-	const onWake = () => {
-		if (document.visibilityState === 'visible') load();
-	};
-	window.addEventListener('focus', onWake);
-	document.addEventListener('visibilitychange', onWake);
+	// —— Fallback: published Google Sheet CSV ——
+	if (SHEET_CSV_URL) {
+		let stopped = false;
+		async function load() {
+			try {
+				const res = await fetch(SHEET_CSV_URL, { cache: 'no-store' });
+				if (!res.ok) return;
+				const total = parseRaised(await res.text());
+				if (!stopped && Number.isFinite(total)) set(total);
+			} catch {
+				/* network blip — keep the last value */
+			}
+		}
+		load();
+		const id = setInterval(load, POLL_MS);
+		const onWake = () => document.visibilityState === 'visible' && load();
+		window.addEventListener('focus', onWake);
+		document.addEventListener('visibilitychange', onWake);
+		return () => {
+			stopped = true;
+			clearInterval(id);
+			window.removeEventListener('focus', onWake);
+			document.removeEventListener('visibilitychange', onWake);
+		};
+	}
 
-	return () => {
-		stopped = true;
-		clearInterval(id);
-		window.removeEventListener('focus', onWake);
-		document.removeEventListener('visibilitychange', onWake);
-	};
+	// Neither configured — keep the fallback value.
 });

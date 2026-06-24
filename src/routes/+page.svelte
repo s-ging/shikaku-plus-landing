@@ -13,7 +13,6 @@
 	import { loadProgress, saveProgress, rectsFromProgress, pruneOld } from '$lib/storage.js';
 
 	const PLAY_URL = 'https://shikaku.plus'; // → full Flutter web app
-	const SUPPORT_URL = 'https://paymongo.page/l/shikaku-plus'; // → funding page
 
 	/** @type {number[][] | null} */
 	let nums = $state(null);
@@ -31,8 +30,6 @@
 	let tipOpen = $state(false);
 	let navVisible = $state(false);
 	let startTs = 0;
-	/** @type {HTMLElement} */
-	let boardCol;
 	/** @type {HTMLElement} */
 	let heroSection;
 
@@ -79,9 +76,6 @@
 	function reopenSolved() {
 		if (solved && !showSolved) showSolved = true;
 	}
-	function scrollToBoard() {
-		boardCol?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-	}
 </script>
 
 <header class="topbar" class:visible={navVisible}>
@@ -95,10 +89,10 @@
 		<div class="hero-text">
 			<h1 class="brand">Shikaku+</h1>
 			<p class="tagline">Complete squares with friends.</p>
-			<button class="play" onclick={scrollToBoard}>Play now</button>
+			<a class="play" href={PLAY_URL}>Play now</a>
 		</div>
 
-		<div class="board-col" bind:this={boardCol}>
+		<div class="board-col">
 			<div class="daily-label">
 				<div class="daily-label-text">
 					<span class="daily-name">Daily Shikaku</span>
@@ -163,7 +157,7 @@
 		<div class="left-col">
 			<About />
 			<AboutHokan />
-			<Support onsupport={() => (window.location.href = SUPPORT_URL)} />
+			<Support />
 		</div>
 		<div class="right-col">
 			<Roadmap />
@@ -257,6 +251,7 @@
 		margin: 14px 0 28px;
 	}
 	.play {
+		display: inline-block;
 		background: var(--button-fill);
 		color: var(--chip-sel-label);
 		border: none;
@@ -265,6 +260,7 @@
 		font-family: var(--font-ui);
 		font-size: 16px;
 		letter-spacing: -0.3px;
+		text-decoration: none;
 		cursor: pointer;
 		transition: filter 120ms ease, transform 80ms ease;
 	}
