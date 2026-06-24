@@ -51,8 +51,15 @@ create policy "admin all" on public.posts
 ## 2. Create your admin user
 
 Supabase → **Authentication → Users → Add user** → your email + a password
-(check "Auto Confirm"). Then **Authentication → Providers / Sign-ups → turn OFF
-public sign-ups** so nobody else can create an account.
+(check "Auto Confirm").
+
+> **Shared project note:** your game's players live in the same `auth.users`
+> pool as this admin user — that's completely fine. Access is gated by **email**
+> (the `ADMIN_EMAIL` guard + the RLS policies below check
+> `auth.jwt() ->> 'email'`), not by being in a separate pool. A random player
+> account can't match your admin email, so it can't reach `/admin` or write
+> posts. **Do NOT disable public sign-ups** here — that would block player
+> registration. The email match is what protects you.
 
 ## 3. Env vars (Cloudflare Pages → Settings → Environment variables, + `.env` local)
 

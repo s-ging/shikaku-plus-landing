@@ -13,10 +13,11 @@
 // from a component or anything that ships to the browser.
 import { createClient } from '@supabase/supabase-js';
 import { env } from '$env/dynamic/private';
+import { cleanSupabaseUrl } from '$lib/supabaseUrl.js';
 
 const supabase =
 	env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
-		? createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+		? createClient(cleanSupabaseUrl(env.SUPABASE_URL), env.SUPABASE_SERVICE_ROLE_KEY, {
 				auth: { persistSession: false }
 		  })
 		: null;

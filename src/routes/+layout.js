@@ -4,11 +4,12 @@
 // configured so the public site keeps working.
 import { createBrowserClient, createServerClient, isBrowser } from '@supabase/ssr';
 import { env } from '$env/dynamic/public';
+import { cleanSupabaseUrl } from '$lib/supabaseUrl.js';
 
 export async function load({ data, depends, fetch }) {
 	depends('supabase:auth');
 
-	const url = env.PUBLIC_SUPABASE_URL;
+	const url = cleanSupabaseUrl(env.PUBLIC_SUPABASE_URL);
 	const key = env.PUBLIC_SUPABASE_ANON_KEY;
 	if (!url || !key) return { supabase: null, session: null, user: null };
 

@@ -4,9 +4,10 @@
 // still works (only /blog and /admin need it).
 import { createServerClient } from '@supabase/ssr';
 import { env } from '$env/dynamic/public';
+import { cleanSupabaseUrl } from '$lib/supabaseUrl.js';
 
 export async function handle({ event, resolve }) {
-	const url = env.PUBLIC_SUPABASE_URL;
+	const url = cleanSupabaseUrl(env.PUBLIC_SUPABASE_URL);
 	const key = env.PUBLIC_SUPABASE_ANON_KEY;
 
 	if (url && key) {

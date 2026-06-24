@@ -14,6 +14,7 @@
 import { readable } from 'svelte/store';
 import { browser } from '$app/environment';
 import { env } from '$env/dynamic/public';
+import { cleanSupabaseUrl } from '$lib/supabaseUrl.js';
 
 /** Legacy: published-to-web CSV URL for a donations sheet. Empty = unused. */
 const SHEET_CSV_URL = '';
@@ -46,7 +47,7 @@ export function parseRaised(csv) {
 export const raised = readable(FALLBACK_RAISED, (set) => {
 	if (!browser) return;
 
-	const SUPA_URL = env.PUBLIC_SUPABASE_URL;
+	const SUPA_URL = cleanSupabaseUrl(env.PUBLIC_SUPABASE_URL);
 	const SUPA_KEY = env.PUBLIC_SUPABASE_ANON_KEY;
 
 	// —— Primary: Supabase Realtime ——
