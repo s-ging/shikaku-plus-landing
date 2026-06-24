@@ -8,8 +8,11 @@
 
 	// Absolute URLs for social cards — built from the live request origin so
 	// they're correct on whatever domain this landing is served from.
+	// Bump OG_VER whenever you change og.png so social platforms (which cache the
+	// preview by exact URL) re-fetch it instead of serving a stale copy.
+	const OG_VER = '2';
 	const origin = $derived(page.url.origin);
-	const ogImage = $derived(`${origin}/og.png`);
+	const ogImage = $derived(`${origin}/og.png?v=${OG_VER}`);
 	const canonical = $derived(`${origin}${page.url.pathname}`);
 
 	// Keep server + client in sync: when the auth session changes (login/logout),
