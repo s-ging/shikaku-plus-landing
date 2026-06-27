@@ -136,6 +136,21 @@
 			a longer retention period is required by law or needed for legitimate service operations.
 		</p>
 
+		<h2>Deleting your account</h2>
+		<p>
+			You can delete your account at any time, either in the app (Settings → Account → Delete
+			account) or by emailing us. When you do, we permanently remove your account identity, sign-in
+			methods (email, Google, Discord), display name and profile, saved puzzles, daily progress, and
+			your individual gameplay history, along with on-device data stored locally by the app. This is
+			immediate and cannot be undone.
+		</p>
+		<p>
+			We retain <strong>anonymized, aggregate</strong> statistics — for example the total number of
+			puzzles solved across all players — in a de-linked form that carries no user id and can no
+			longer be tied to you. This keeps community totals accurate without identifying you. See our
+			<a href="/data-deletion">Data Deletion</a> page for full details.
+		</p>
+
 		<h2>Your rights</h2>
 		<p>
 			Depending on applicable law, including the Philippines Data Privacy Act, you may have rights

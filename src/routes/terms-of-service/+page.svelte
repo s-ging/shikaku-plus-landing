@@ -95,6 +95,14 @@
 			information. Some stats may be public, semi-public, or visible to other users depending on the
 			feature.
 		</p>
+		<p>
+			You can delete your account at any time (Settings → Account → Delete account, or by email),
+			which permanently removes your identity, sign-in methods, profile, saved puzzles, progress, and
+			individual gameplay history. We retain anonymized, aggregate statistics — such as the total
+			number of puzzles solved across all players — in a de-linked form with no user id, so community
+			totals stay accurate without identifying you. See our
+			<a href="/data-deletion">Data Deletion</a> page for details.
+		</p>
 
 		<h2>Intellectual property</h2>
 		<p>

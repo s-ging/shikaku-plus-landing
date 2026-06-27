@@ -20,11 +20,20 @@
 	</nav>
 
 	<article class="doc">
-		<h1>Data Deletion</h1>
+		<h1>Deleting your Shikaku+ account</h1>
 
 		<p class="lead">
-			If you want us to delete the personal data associated with your Shikaku+ account, email us at:
+			You can delete your Shikaku+ account and its data at any time. There are two ways to do it:
 		</p>
+
+		<h2>In the app</h2>
+		<p>
+			Go to <strong>Settings → Account → Delete account</strong> and confirm. This removes your
+			account immediately.
+		</p>
+
+		<h2>By email</h2>
+		<p>If you can't access the app, send us a deletion request:</p>
 
 		<div class="contact-block">
 			<a href="mailto:hello.shikaku.plus@gmail.com?subject=Data%20Deletion%20Request">
@@ -34,36 +43,34 @@
 		</div>
 
 		<p>
-			Please include the email address or account identifier tied to your Shikaku+ account.
+			Please include the email address or account identifier tied to your Shikaku+ account. If your
+			account was created using Google or Discord sign-in, use the same email or identifier so we can
+			locate the correct records.
 		</p>
 
-		<h2>What happens next</h2>
-		<p>
-			After we receive your request, we will verify it and delete or anonymize the personal data we
-			store for that account, subject to any legal, security, or operational requirements that
-			require us to retain certain records.
-		</p>
-
-		<h2>What we may retain</h2>
-		<p>We may retain limited information needed for:</p>
+		<h2>What we permanently delete</h2>
+		<p>When your account is deleted we permanently remove:</p>
 		<ul>
-			<li>Fraud prevention.</li>
-			<li>Security.</li>
-			<li>Dispute resolution.</li>
-			<li>Legal compliance.</li>
-			<li>Accounting or audit purposes.</li>
+			<li>Your account identity and sign-in methods (email, Google, Discord).</li>
+			<li>Your display name and profile.</li>
+			<li>Your saved puzzles and daily progress.</li>
+			<li>Your individual gameplay history (the per-account event log).</li>
+			<li>On-device data stored locally by the app.</li>
 		</ul>
 
-		<h2>OAuth accounts</h2>
+		<h2>What we retain, anonymized</h2>
 		<p>
-			If your account was created using Facebook, Google, or Discord sign-in, we may need the same
-			email address or identifier used on that account to locate the correct records.
+			We keep <strong>aggregate</strong> gameplay statistics — for example the total number of
+			puzzles solved across all players — in a <strong>de-linked</strong> form that carries
+			<strong>no user id</strong> and can no longer be tied to you or any account. This keeps
+			community totals (such as the global counter on our homepage) accurate, and it does not
+			identify you.
 		</p>
 
-		<h2>Questions before requesting</h2>
+		<h2>This is immediate and irreversible</h2>
 		<p>
-			If you want to ask about what data we store before requesting deletion, contact us at:<br />
-			<a href="mailto:hello.shikaku.plus@gmail.com">hello.shikaku.plus@gmail.com</a>
+			Deletion takes effect immediately and cannot be undone. We may retain a minimal record of the
+			deletion request itself where required for legal, security, or fraud-prevention purposes.
 		</p>
 	</article>
 

@@ -11,8 +11,30 @@
 	import AboutHokan from '$lib/AboutHokan.svelte';
 	import { dailyGrid, dailySeed, dailyDateLabel } from '$lib/daily.js';
 	import { loadProgress, saveProgress, rectsFromProgress, pruneOld } from '$lib/storage.js';
+	import { fetchGlobalBoardsSolved } from '$lib/boardsSolved.js';
 
 	const PLAY_URL = 'https://shikaku.plus'; // → full Flutter web app
+
+	/**
+	 * Round a raw solved-count DOWN to a clean bucket so the displayed figure is
+	 * always a safe under-statement (we never overpromise): nearest 100 at/above
+	 * 1,000, nearest 50 below. e.g. 1,247 → 1,200, 83 → 50. Anything that floors
+	 * to 0 (and any non-finite input) returns null so the stat renders nothing
+	 * rather than a hollow "0+". Pure display logic — kept here on the landing
+	 * page, deliberately out of the data layer.
+	 * @param {number | null} n
+	 * @returns {number | null}
+	 */
+	function bucketBoardsSolved(n) {
+		if (n == null || !Number.isFinite(n)) return null;
+		const step = n >= 1000 ? 100 : 50;
+		const floored = Math.floor(n / step) * step;
+		return floored >= step ? floored : null;
+	}
+
+	/** Bucketed global tally for the hero stat, or null until/unless available. */
+	/** @type {number | null} */
+	let boardsSolved = $state(null);
 
 	/** @type {number[][] | null} */
 	let nums = $state(null);
@@ -48,6 +70,12 @@
 		}
 		startTs = Date.now();
 		nums = dailyGrid(); // generate last so Board mounts with everything ready
+
+		// Fire-and-forget: never block first paint on the global tally. On
+		// null/error it stays null and the hero stat simply doesn't render.
+		fetchGlobalBoardsSolved().then((n) => {
+			boardsSolved = bucketBoardsSolved(n);
+		});
 
 		function checkNav() {
 			navVisible = heroSection
@@ -108,6 +136,13 @@
 			<h1 class="brand">Shikaku+</h1>
 			<p class="tagline">Complete squares with friends.</p>
 			<a class="play" href={PLAY_URL}>Play now</a>
+
+			{#if boardsSolved}
+				<p class="solved-stat">
+					<span class="solved-num">{boardsSolved.toLocaleString()}+</span>
+					<span class="solved-label">puzzles solved by players worldwide</span>
+				</p>
+			{/if}
 		</div>
 
 		<div class="board-col">
@@ -287,6 +322,26 @@
 	}
 	.play:active {
 		transform: translateY(1px);
+	}
+
+	.solved-stat {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		margin: 36px 0 0;
+	}
+	.solved-num {
+		font-family: var(--font-brand);
+		font-size: clamp(34px, 6vw, 48px);
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: -0.5px;
+		color: var(--button-fill);
+	}
+	.solved-label {
+		font-size: 14px;
+		letter-spacing: -0.2px;
+		color: var(--text-secondary);
 	}
 
 	.board-col {
