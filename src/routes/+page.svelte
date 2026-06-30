@@ -4,6 +4,7 @@
 	import Board from '$lib/Board.svelte';
 	import SolvedOverlay from '$lib/SolvedOverlay.svelte';
 	import About from '$lib/About.svelte';
+	import Changelog from '$lib/Changelog.svelte';
 	import Roadmap from '$lib/Roadmap.svelte';
 	import Support from '$lib/Support.svelte';
 	import SupportRewards from '$lib/SupportRewards.svelte';
@@ -204,6 +205,8 @@
 			<p class="board-note">New puzzle every day, at 6:00 AM Philippine Time.</p>
 		</div>
 	</section>
+
+	<Changelog />
 
 	<!-- About + Roadmap -->
 	<section class="two-col">
