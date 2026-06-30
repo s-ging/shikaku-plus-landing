@@ -224,6 +224,8 @@
 
 	<footer class="footer">
 		<nav class="legal-links">
+			<a href="/blog">Blog</a>
+			<span class="sep">·</span>
 			<a href="/privacy-policy">Privacy Policy</a>
 			<span class="sep">·</span>
 			<a href="/terms-of-service">Terms of Service</a>
