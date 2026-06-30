@@ -65,6 +65,14 @@ Supabase → **Authentication → Users → Add user** → your email + a passwo
 
 - `ADMIN_EMAIL` = the same email (the `/admin` guard checks this).
 - `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY` — already set for the donation bar; the blog reuses them.
+- `PUBLIC_TURNSTILE_SITE_KEY` — only needed if Bot Protection is on for the Supabase
+  project (it is, shared with the game's app). `/admin/login` renders a Turnstile
+  widget and passes the resulting token to `signInWithPassword`; without this var
+  the widget doesn't render and sign-in fails with "captcha protection: request
+  disallowed". **Reuse the same widget the app already uses** (Supabase stores one
+  secret key project-wide, so a second widget's tokens won't validate) — just add
+  `go.shikaku.plus` and `localhost` to that widget's allowed domains in the
+  Cloudflare Turnstile dashboard.
 
 > ⚠️ The admin email lives in **two** places that must match: `ADMIN_EMAIL`
 > (server guard) **and** the RLS policies above (database). Update both if it

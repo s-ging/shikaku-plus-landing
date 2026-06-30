@@ -2,6 +2,15 @@
 import type { SupabaseClient, Session, User } from '@supabase/supabase-js';
 
 declare global {
+	interface Window {
+		// Injected by the Cloudflare Turnstile script tag loaded in admin/login.
+		turnstile?: {
+			render: (el: Element, opts: Record<string, unknown>) => string;
+			reset: (widgetId: string) => void;
+			remove: (widgetId: string) => void;
+		};
+	}
+
 	namespace App {
 		interface Locals {
 			supabase: SupabaseClient | null;
