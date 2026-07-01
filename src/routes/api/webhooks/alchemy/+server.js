@@ -9,7 +9,7 @@ import { hmacValid } from '$lib/server/verify.js';
 
 // Crypto is OFF for now (it's not offered on the page, and the shared address
 // also receives client payments). Records nothing while false — flip to true
-// after moving to a dedicated donation wallet to re-enable. See DONATIONS_SETUP §3/§6.
+// after moving to a dedicated donation wallet to re-enable. See docs/DONATIONS_SETUP.md §3/§6.
 const CRYPTO_ENABLED = false;
 
 /** @type {import('./$types').RequestHandler} */

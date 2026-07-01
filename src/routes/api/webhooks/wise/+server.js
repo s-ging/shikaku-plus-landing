@@ -3,7 +3,7 @@
 // Wise signs the raw body with their private key; you verify with Wise's
 // PUBLIC key (RSA-SHA256, signature base64 in `X-Signature-SHA256`).
 //
-// Subscribe via the Wise API (see DONATIONS_SETUP.md §5) to the
+// Subscribe via the Wise API (see docs/DONATIONS_SETUP.md §5) to the
 // "balances#credit" event with delivery schema version 4.0.0. Confirmed
 // payload shape (schema 4.0.0):
 //   { event_type: "balances#credit", schema_version, sent_at,

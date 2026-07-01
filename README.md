@@ -64,3 +64,15 @@ npm run test         # vitest (see src/lib/puzzle.test.js)
 Uses `@sveltejs/adapter-auto`, which picks an adapter based on the host (Vercel,
 Netlify, etc.). If deploying somewhere it can't detect, install and configure the
 matching [SvelteKit adapter](https://svelte.dev/docs/kit/adapters).
+
+## Docs
+
+Setup guides, feature specs, and session logs live in [`docs/`](docs/):
+
+- [`BLOG_SETUP.md`](docs/BLOG_SETUP.md) — blog/admin CMS setup
+- [`DONATIONS_SETUP.md`](docs/DONATIONS_SETUP.md) — donations bar / webhooks setup
+- [`COUNTER.md`](docs/COUNTER.md) — "boards solved" counter spec
+- [`LANDING_HANDOFF.md`](docs/LANDING_HANDOFF.md) — data-deletion / legal handoff notes
+- [`attrib_export.md`](docs/attrib_export.md) — in-app credits/licenses export
+- [`landing_page_attrib_prompt.md`](docs/landing_page_attrib_prompt.md) — spec for the Credits/Open-source landing sections
+- `log_*.md` — dated session logs
