@@ -13,6 +13,7 @@
 			The core mechanic is simple: partition a grid into rectangles so each rectangle contains
 			exactly one number, and the rectangle&rsquo;s area matches that number.
 		</p>
+		<a class="read-more" href="/about">Read more →</a>
 	</div>
 </section>
 
@@ -40,5 +41,15 @@
 	}
 	.card p + p {
 		margin-top: 1.1em;
+	}
+	.read-more {
+		display: inline-block;
+		margin-top: 14px;
+		font-size: 14px;
+		color: var(--button-fill);
+		text-decoration: none;
+	}
+	.read-more:hover {
+		text-decoration: underline;
 	}
 </style>

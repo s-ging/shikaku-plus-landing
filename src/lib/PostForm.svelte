@@ -150,7 +150,7 @@
 		cursor: not-allowed;
 	}
 	.err {
-		color: #e88;
+		color: var(--invalid-stroke);
 		font-size: 14px;
 		margin: 0 0 14px;
 	}

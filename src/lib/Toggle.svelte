@@ -40,7 +40,7 @@
 		height: 22px;
 		padding: 0;
 		border: none;
-		border-radius: 999px;
+		border-radius: var(--radius);
 		background: color-mix(in srgb, var(--text-primary) 16%, transparent);
 		cursor: pointer;
 		transition: background 140ms ease;
@@ -58,7 +58,7 @@
 		left: 2px;
 		width: 18px;
 		height: 18px;
-		border-radius: 50%;
+		border-radius: var(--radius);
 		background: var(--text-primary);
 		transition: transform 140ms ease;
 	}

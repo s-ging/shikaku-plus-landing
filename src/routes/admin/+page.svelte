@@ -172,7 +172,7 @@
 		font-size: 12px;
 		color: var(--text-secondary);
 		background: color-mix(in srgb, var(--text-primary) 10%, transparent);
-		border-radius: 999px;
+		border-radius: var(--radius);
 		padding: 1px 7px;
 	}
 	.tab.active .count {
@@ -238,7 +238,7 @@
 	.type-badge {
 		font-size: 12px;
 		padding: 3px 9px;
-		border-radius: 999px;
+		border-radius: var(--radius);
 		color: var(--text-secondary);
 		background: color-mix(in srgb, var(--text-primary) 10%, transparent);
 		white-space: nowrap;
@@ -289,7 +289,7 @@
 		color: var(--text-primary);
 	}
 	.link.danger:hover {
-		color: #e88;
+		color: var(--invalid-stroke);
 	}
 
 	@media (max-width: 720px) {

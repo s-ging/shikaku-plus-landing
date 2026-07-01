@@ -4,8 +4,6 @@
 	import Board from '$lib/Board.svelte';
 	import SolvedOverlay from '$lib/SolvedOverlay.svelte';
 	import About from '$lib/About.svelte';
-	import Credits from '$lib/Credits.svelte';
-	import OpenSource from '$lib/OpenSource.svelte';
 	import Changelog from '$lib/Changelog.svelte';
 	import Roadmap from '$lib/Roadmap.svelte';
 	import Support from '$lib/Support.svelte';
@@ -223,9 +221,6 @@
 		</div>
 		<SupportCountdown />
 	</section>
-
-	<Credits />
-	<OpenSource />
 
 	<footer class="footer">
 		<nav class="legal-links">

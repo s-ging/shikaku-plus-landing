@@ -158,7 +158,7 @@
 	}
 	.err {
 		margin: 0;
-		color: #e88;
+		color: var(--invalid-stroke);
 		font-size: 13px;
 	}
 	.turnstile {
