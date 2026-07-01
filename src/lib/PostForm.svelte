@@ -2,7 +2,14 @@
 	// Create/edit form. `post` null = new; otherwise edit. Writes go through the
 	// browser Supabase client (RLS restricts writes to the admin).
 	import Editor from '$lib/Editor.svelte';
+	import Toggle from '$lib/Toggle.svelte';
 	import { goto } from '$app/navigation';
+
+	const TYPES = [
+		{ value: 'blog', label: 'Blog' },
+		{ value: 'patch_notes', label: 'Patch Notes' },
+		{ value: 'announcement', label: 'Announcement' }
+	];
 
 	let { supabase, post = null } = $props();
 
@@ -11,6 +18,7 @@
 	let excerpt = $state(post?.excerpt ?? '');
 	let html = $state(post?.content_html ?? '');
 	let published = $state(post?.published ?? false);
+	let postType = $state(post?.post_type ?? 'blog');
 	let slugTouched = $state(!!post); // don't auto-rewrite an existing slug
 	let busy = $state(false);
 	let err = $state('');
@@ -44,6 +52,7 @@
 			excerpt: excerpt.trim(),
 			content_html: html,
 			published,
+			post_type: postType,
 			updated_at: new Date().toISOString()
 		};
 		const res = post
@@ -61,37 +70,56 @@
 <main class="wrap">
 	<header class="bar">
 		<a class="back" href="/admin">← Posts</a>
-		<div class="right">
-			<label class="pub"><input type="checkbox" bind:checked={published} /> Published</label>
-			<button class="save" onclick={save} disabled={busy}>{busy ? 'Saving…' : 'Save'}</button>
-		</div>
+		<button class="save" onclick={save} disabled={busy}>{busy ? 'Saving…' : 'Save'}</button>
 	</header>
 
 	{#if err}<p class="err">{err}</p>{/if}
 
-	<input class="title" placeholder="Post title" bind:value={title} />
+	<div class="layout">
+		<div class="main">
+			<input class="title" placeholder="Post title" bind:value={title} />
+			<Editor content={html} onUpdate={(/** @type {string} */ v) => (html = v)} />
+		</div>
 
-	<div class="meta">
-		<label>
-			<span>Slug</span>
-			<input bind:value={slug} oninput={() => (slugTouched = true)} placeholder="post-slug" />
-		</label>
-		<label>
-			<span>Excerpt</span>
-			<input bind:value={excerpt} placeholder="One-line summary for the list" />
-		</label>
+		<aside class="sidebar">
+			<div class="field">
+				<span class="field-label">Published</span>
+				<Toggle checked={published} onchange={(/** @type {boolean} */ v) => (published = v)} />
+			</div>
+
+			<label class="field">
+				<span class="field-label">Type</span>
+				<select bind:value={postType}>
+					{#each TYPES as t (t.value)}
+						<option value={t.value}>{t.label}</option>
+					{/each}
+				</select>
+			</label>
+
+			<label class="field">
+				<span class="field-label">Slug</span>
+				<input bind:value={slug} oninput={() => (slugTouched = true)} placeholder="post-slug" />
+			</label>
+
+			<label class="field">
+				<span class="field-label">Excerpt</span>
+				<textarea
+					bind:value={excerpt}
+					placeholder="One-line summary for the list"
+					rows="3"
+				></textarea>
+			</label>
+
+			{#if slug}<p class="hint">Public URL: <code>/blog/{slug}</code></p>{/if}
+		</aside>
 	</div>
-
-	<Editor content={html} onUpdate={(/** @type {string} */ v) => (html = v)} />
-
-	{#if slug}<p class="hint">Public URL: <code>/blog/{slug}</code></p>{/if}
 </main>
 
 <style>
 	.wrap {
-		max-width: 760px;
+		max-width: 1040px;
 		margin: 0 auto;
-		padding: 40px 24px 80px;
+		padding: 40px clamp(20px, 4vw, 40px) 80px;
 	}
 	.bar {
 		display: flex;
@@ -106,19 +134,6 @@
 	}
 	.back:hover {
 		color: var(--text-primary);
-	}
-	.right {
-		display: flex;
-		align-items: center;
-		gap: 14px;
-	}
-	.pub {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		font-size: 14px;
-		color: var(--text-secondary);
-		cursor: pointer;
 	}
 	.save {
 		background: var(--button-fill);
@@ -139,6 +154,17 @@
 		font-size: 14px;
 		margin: 0 0 14px;
 	}
+
+	.layout {
+		display: grid;
+		grid-template-columns: 1fr 280px;
+		gap: 24px;
+		align-items: start;
+	}
+	.main {
+		min-width: 0;
+	}
+
 	.title {
 		width: 100%;
 		padding: 6px 0;
@@ -153,20 +179,32 @@
 	.title:focus {
 		outline: none;
 	}
-	.meta {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 12px;
-		margin-bottom: 16px;
-	}
-	.meta label {
+
+	.sidebar {
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
+		gap: 18px;
+		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
+		border-radius: var(--radius);
+		padding: 18px;
+		position: sticky;
+		top: 20px;
+	}
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+	.field-label {
 		font-size: 12px;
+		letter-spacing: 0.2px;
+		text-transform: uppercase;
 		color: var(--text-secondary);
 	}
-	.meta input {
+	.field input,
+	.field select,
+	.field textarea {
 		padding: 10px 12px;
 		background: color-mix(in srgb, var(--text-primary) 5%, transparent);
 		border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent);
@@ -174,22 +212,35 @@
 		color: var(--text-primary);
 		font-family: var(--font-ui);
 		font-size: 14px;
+		resize: vertical;
 	}
-	.meta input:focus {
+	.field input:focus,
+	.field select:focus,
+	.field textarea:focus {
 		outline: none;
 		border-color: var(--button-fill);
 	}
+	.field select {
+		cursor: pointer;
+	}
+
 	.hint {
-		margin: 14px 0 0;
-		font-size: 13px;
+		margin: 0;
+		font-size: 12px;
+		line-height: 1.5;
 		color: var(--text-secondary);
+		word-break: break-all;
 	}
 	.hint code {
 		color: var(--text-primary);
 	}
-	@media (max-width: 560px) {
-		.meta {
+
+	@media (max-width: 760px) {
+		.layout {
 			grid-template-columns: 1fr;
+		}
+		.sidebar {
+			position: static;
 		}
 	}
 </style>

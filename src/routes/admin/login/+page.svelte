@@ -54,7 +54,10 @@
 	});
 
 	onDestroy(() => {
-		if (window.turnstile && widgetId) window.turnstile.remove(widgetId);
+		// onDestroy (unlike onMount) also fires during SSR — guard for no `window` there.
+		if (typeof window !== 'undefined' && window.turnstile && widgetId) {
+			window.turnstile.remove(widgetId);
+		}
 	});
 
 	async function login(/** @type {SubmitEvent} */ e) {

@@ -1,5 +1,5 @@
 <script>
-	import { goto, invalidate } from '$app/navigation';
+	import Toggle from '$lib/Toggle.svelte';
 
 	let { data } = $props();
 	let posts = $state(data.posts);
@@ -7,15 +7,23 @@
 		posts = data.posts;
 	});
 
-	async function logout() {
-		await data.supabase?.auth.signOut();
-		await invalidate('supabase:auth');
-		goto('/admin/login');
-	}
+	const TYPES = [
+		{ value: 'blog', label: 'Blog' },
+		{ value: 'patch_notes', label: 'Patch Notes' },
+		{ value: 'announcement', label: 'Announcement' }
+	];
+	const typeLabel = (/** @type {string} */ t) => TYPES.find((x) => x.value === t)?.label ?? t;
+	const typeOf = (/** @type {any} */ p) => p.post_type ?? 'blog';
 
-	async function togglePublish(/** @type {any} */ post) {
+	let filter = $state('all');
+	const filtered = $derived(
+		filter === 'all' ? posts : posts.filter((/** @type {any} */ p) => typeOf(p) === filter)
+	);
+	const countFor = (/** @type {string} */ t) =>
+		t === 'all' ? posts.length : posts.filter((/** @type {any} */ p) => typeOf(p) === t).length;
+
+	async function togglePublish(/** @type {any} */ post, /** @type {boolean} */ next) {
 		if (!data.supabase) return;
-		const next = !post.published;
 		const { error } = await data.supabase
 			.from('posts')
 			.update({ published: next, updated_at: new Date().toISOString() })
@@ -25,9 +33,17 @@
 
 	async function remove(/** @type {any} */ post) {
 		if (!data.supabase) return;
-		if (!confirm(`Delete “${post.title}”? This can't be undone.`)) return;
+		if (!confirm(`Delete "${post.title}"? This can't be undone.`)) return;
 		const { error } = await data.supabase.from('posts').delete().eq('id', post.id);
 		if (!error) posts = posts.filter((/** @type {any} */ p) => p.id !== post.id);
+	}
+
+	function fmtDate(/** @type {string} */ d) {
+		return new Date(d).toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric'
+		});
 	}
 </script>
 
@@ -36,42 +52,73 @@
 <main class="wrap">
 	<header class="bar">
 		<h1>Posts</h1>
-		<div class="actions">
-			<a class="btn" href="/blog" target="_blank">View blog ↗</a>
-			<a class="btn primary" href="/admin/new">New post</a>
-			<button class="btn ghost" onclick={logout}>Sign out</button>
-		</div>
+		<a class="btn primary" href="/admin/new">+ New post</a>
 	</header>
 
-	{#if posts.length === 0}
-		<p class="empty">No posts yet. <a href="/admin/new">Write your first one →</a></p>
-	{:else}
-		<ul class="list">
-			{#each posts as p (p.id)}
-				<li class="row">
-					<a class="title" href="/admin/{p.id}">{p.title || '(untitled)'}</a>
-					<span class="status" class:live={p.published}>{p.published ? 'Published' : 'Draft'}</span>
-					<button class="link" onclick={() => togglePublish(p)}>{p.published ? 'Unpublish' : 'Publish'}</button>
-					<a class="link" href="/admin/{p.id}">Edit</a>
-					<button class="link danger" onclick={() => remove(p)}>Delete</button>
-				</li>
-			{/each}
-		</ul>
-	{/if}
+	<div class="tabs">
+		<button class="tab" class:active={filter === 'all'} onclick={() => (filter = 'all')}>
+			All <span class="count">{countFor('all')}</span>
+		</button>
+		{#each TYPES as t (t.value)}
+			<button class="tab" class:active={filter === t.value} onclick={() => (filter = t.value)}>
+				{t.label} <span class="count">{countFor(t.value)}</span>
+			</button>
+		{/each}
+	</div>
+
+	<div class="panel">
+		{#if filtered.length === 0}
+			<p class="empty">
+				{#if posts.length === 0}
+					No posts yet. <a href="/admin/new">Write your first one →</a>
+				{:else}
+					No posts in this category.
+				{/if}
+			</p>
+		{:else}
+			<div class="table">
+				<div class="thead">
+					<span class="col-title">Title</span>
+					<span class="col-type">Type</span>
+					<span class="col-status">Status</span>
+					<span class="col-date">Updated</span>
+					<span class="col-actions"></span>
+				</div>
+				{#each filtered as p (p.id)}
+					<div class="row">
+						<a class="col-title title" href="/admin/{p.id}">{p.title || '(untitled)'}</a>
+						<span class="col-type">
+							<span class="type-badge type-{typeOf(p)}">{typeLabel(typeOf(p))}</span>
+						</span>
+						<span class="col-status">
+							<Toggle checked={p.published} onchange={(/** @type {boolean} */ next) => togglePublish(p, next)} />
+							<span class="status-label" class:live={p.published}>
+								{p.published ? 'Live' : 'Draft'}
+							</span>
+						</span>
+						<span class="col-date">{fmtDate(p.updated_at)}</span>
+						<span class="col-actions">
+							<a class="link" href="/admin/{p.id}">Edit</a>
+							<button class="link danger" onclick={() => remove(p)}>Delete</button>
+						</span>
+					</div>
+				{/each}
+			</div>
+		{/if}
+	</div>
 </main>
 
 <style>
 	.wrap {
-		max-width: 760px;
+		max-width: 960px;
 		margin: 0 auto;
-		padding: 48px 24px 80px;
+		padding: 40px clamp(20px, 4vw, 40px) 0;
 	}
 	.bar {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 16px;
-		margin-bottom: 28px;
+		margin-bottom: 24px;
 	}
 	h1 {
 		margin: 0;
@@ -81,17 +128,11 @@
 		letter-spacing: -0.6px;
 		color: var(--text-primary);
 	}
-	.actions {
-		display: flex;
-		gap: 8px;
-	}
 	.btn {
-		padding: 9px 14px;
+		padding: 10px 16px;
 		border-radius: var(--radius);
 		font-size: 14px;
 		text-decoration: none;
-		color: var(--text-primary);
-		background: color-mix(in srgb, var(--text-primary) 8%, transparent);
 		border: none;
 		cursor: pointer;
 		font-family: var(--font-ui);
@@ -100,47 +141,139 @@
 		background: var(--button-fill);
 		color: var(--chip-sel-label);
 	}
-	.btn.ghost {
+
+	.tabs {
+		display: flex;
+		gap: 4px;
+		margin-bottom: 16px;
+		border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
+	}
+	.tab {
+		display: flex;
+		align-items: center;
+		gap: 6px;
 		background: none;
+		border: none;
+		padding: 10px 14px;
+		font-family: var(--font-ui);
+		font-size: 14px;
 		color: var(--text-secondary);
+		cursor: pointer;
+		border-bottom: 2px solid transparent;
+	}
+	.tab:hover {
+		color: var(--text-primary);
+	}
+	.tab.active {
+		color: var(--text-primary);
+		border-bottom-color: var(--button-fill);
+	}
+	.count {
+		font-size: 12px;
+		color: var(--text-secondary);
+		background: color-mix(in srgb, var(--text-primary) 10%, transparent);
+		border-radius: 999px;
+		padding: 1px 7px;
+	}
+	.tab.active .count {
+		color: var(--chip-sel-label);
+		background: var(--button-fill);
+	}
+
+	.panel {
+		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
+		border-radius: var(--radius);
+		padding: 4px 20px;
+		margin-bottom: 40px;
 	}
 	.empty {
+		padding: 24px 0;
 		color: var(--text-secondary);
 	}
-	.empty a,
-	.title {
+	.empty a {
 		color: var(--button-fill);
 		text-decoration: none;
 	}
-	.list {
-		list-style: none;
-		margin: 0;
-		padding: 0;
+
+	.table {
 		display: flex;
 		flex-direction: column;
 	}
+	.thead,
 	.row {
+		display: grid;
+		grid-template-columns: 1fr 130px 140px 100px 110px;
+		align-items: center;
+		gap: 12px;
+	}
+	.thead {
+		padding: 12px 0;
+		font-size: 12px;
+		letter-spacing: 0.3px;
+		text-transform: uppercase;
+		color: var(--text-secondary);
+		border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
+	}
+	.row {
+		padding: 14px 0;
+		border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
+	}
+	.row:last-child {
+		border-bottom: none;
+	}
+
+	.title {
+		color: var(--text-primary);
+		text-decoration: none;
+		font-size: 15px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.title:hover {
+		color: var(--button-fill);
+	}
+
+	.type-badge {
+		font-size: 12px;
+		padding: 3px 9px;
+		border-radius: 999px;
+		color: var(--text-secondary);
+		background: color-mix(in srgb, var(--text-primary) 10%, transparent);
+		white-space: nowrap;
+	}
+	.type-badge.type-patch_notes {
+		color: #6a8aaa;
+		background: color-mix(in srgb, #6a8aaa 22%, transparent);
+	}
+	.type-badge.type-announcement {
+		color: #d08080;
+		background: color-mix(in srgb, #d08080 22%, transparent);
+	}
+
+	.col-status {
 		display: flex;
 		align-items: center;
-		gap: 14px;
-		padding: 14px 0;
-		border-top: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
+		gap: 8px;
 	}
-	.title {
-		flex: 1;
-		font-size: 16px;
-		color: var(--text-primary);
-	}
-	.status {
-		font-size: 12px;
+	.status-label {
+		font-size: 13px;
 		color: var(--text-secondary);
-		padding: 2px 8px;
-		border-radius: 999px;
-		background: color-mix(in srgb, var(--text-primary) 10%, transparent);
 	}
-	.status.live {
+	.status-label.live {
 		color: #88b098;
-		background: color-mix(in srgb, #88b098 22%, transparent);
+	}
+
+	.col-date {
+		font-size: 13px;
+		color: var(--text-secondary);
+	}
+
+	.col-actions {
+		display: flex;
+		gap: 12px;
+		justify-content: flex-end;
 	}
 	.link {
 		background: none;
@@ -157,5 +290,19 @@
 	}
 	.link.danger:hover {
 		color: #e88;
+	}
+
+	@media (max-width: 720px) {
+		.thead {
+			display: none;
+		}
+		.row {
+			grid-template-columns: 1fr;
+			gap: 8px;
+			padding: 16px 0;
+		}
+		.col-actions {
+			justify-content: flex-start;
+		}
 	}
 </style>
