@@ -16,7 +16,7 @@
 	import { page } from '$app/state';
 	import { jsonLd, PLAY_STORE_URL } from '$lib/jsonld.js';
 
-	const PLAY_URL = 'https://shikaku.plus'; // → full Flutter web app
+	const PLAY_URL = 'https://play.shikaku.plus'; // → full Flutter web app
 
 	// Structured data for the home page: the site, who makes it, and the game.
 	// The description reuses the page's meta description word for word, so the
@@ -24,6 +24,13 @@
 	// the canonical tag, so they follow the landing page to shikaku.plus.
 	const DESCRIPTION =
 		'Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today.';
+	// Help Me! links (?seed=…) and ?support on shikaku.plus belong to the game.
+	const appLinkTarget = $derived(
+		page.url.hostname === 'shikaku.plus' &&
+			(page.url.searchParams.has('seed') || page.url.searchParams.has('support'))
+			? `${PLAY_URL}/${page.url.search}`
+			: null
+	);
 	const structuredData = $derived.by(() => {
 		const origin = page.url.origin;
 		return jsonLd({
@@ -157,6 +164,10 @@
 
 <svelte:head>
 	{@html structuredData}
+	{#if appLinkTarget}
+		<!-- No-JavaScript fallback for Help Me! links; app.html handles everyone else. -->
+		<noscript><meta http-equiv="refresh" content={`0;url=${appLinkTarget}`} /></noscript>
+	{/if}
 	<title>Shikaku+ — Complete squares with friends</title>
 	<meta
 		name="description"

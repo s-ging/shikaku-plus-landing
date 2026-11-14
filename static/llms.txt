@@ -4,7 +4,7 @@
 
 ## Play
 
-- [Play in your browser](https://shikaku.plus): the full game, no install
+- [Play in your browser](https://play.shikaku.plus): the full game, no install
 - [Google Play (Android)](https://play.google.com/store/apps/details?id=plus.shikaku.app)
 - [Shikaku+ VS, public beta](https://vs.shikaku.plus): head-to-head Shikaku+ in the browser
 - [Learn VS](https://vs.shikaku.plus/learn): the interactive VS tutorial

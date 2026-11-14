@@ -2,6 +2,48 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+		<!--
+		  Domain swap (shikaku-plus-info decision 0024): this landing page serves
+		  shikaku.plus and the game lives at play.shikaku.plus. Runs before
+		  anything renders, only on https://shikaku.plus/ (not on go.shikaku.plus,
+		  not on /blog or other pages):
+		  - Help Me! links (?seed=…) and ?support belong to the game: send them on
+		    with the query untouched.
+		  - A returning player has the old game's data (flutter.* keys) on this
+		    origin: send them straight into the game (Krischan, 2026-11-14), and
+		    the first time, carry the data along in the URL fragment (#handoff=…,
+		    never sent to a server). play.shikaku.plus's web/index.html receives
+		    it. The old keys stay here as a backup.
+		  - Everyone else (new visitors, crawlers) sees this page.
+		-->
+		<script>
+			(function () {
+				try {
+					if (location.hostname !== 'shikaku.plus' || location.pathname !== '/') return;
+					var q = new URLSearchParams(location.search);
+					var appLink = q.has('seed') || q.has('support');
+					var ls = window.localStorage;
+					var keys = [];
+					for (var i = 0; i < ls.length; i++) {
+						var k = ls.key(i);
+						if (k && k.indexOf('flutter.') === 0) keys.push(k);
+					}
+					if (!appLink && keys.length === 0) return;
+					var hash = '';
+					if (keys.length && !ls.getItem('shikaku-handoff-done')) {
+						var data = {};
+						for (var j = 0; j < keys.length; j++) data[keys[j]] = ls.getItem(keys[j]);
+						var packed = encodeURIComponent(JSON.stringify(data));
+						// Stay far below browsers' URL limits; past this, skip the handoff.
+						if (packed.length < 1500000) {
+							hash = '#handoff=' + packed;
+							ls.setItem('shikaku-handoff-done', String(Date.now()));
+						}
+					}
+					location.replace('https://play.shikaku.plus/' + location.search + hash);
+				} catch (e) {}
+			})();
+		</script>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="keywords" content="shikaku, puzzle, daily puzzle, logic puzzle, number puzzle" />
 		<meta name="author" content="Shikaku+" />
