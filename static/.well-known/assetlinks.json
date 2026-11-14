@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "plus.shikaku.app",
+      "sha256_cert_fingerprints":
+        ["11:D6:7C:20:C0:CE:19:20:05:04:BF:D2:19:E7:2A:AD:C2:D2:8B:6D:4E:4D:0B:D9:49:9D:5C:93:34:C4:80:7B"]
+    }
+  }
+]
