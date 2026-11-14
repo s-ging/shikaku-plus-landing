@@ -30,7 +30,11 @@
 					}
 					if (!appLink && keys.length === 0) return;
 					var hash = '';
-					if (keys.length && !ls.getItem('shikaku-handoff-done')) {
+					// The handoff window closes 2026-11-29 00:00 Philippine Time (14 days
+					// after the swap, Krischan 2026-11-14). After that, returning players
+					// still go straight into the game, just without their old data.
+					var HANDOFF_ENDS = Date.UTC(2026, 10, 28, 16, 0, 0);
+					if (keys.length && Date.now() < HANDOFF_ENDS && !ls.getItem('shikaku-handoff-done')) {
 						var data = {};
 						for (var j = 0; j < keys.length; j++) data[keys[j]] = ls.getItem(keys[j]);
 						var packed = encodeURIComponent(JSON.stringify(data));
