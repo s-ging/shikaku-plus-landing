@@ -14,7 +14,8 @@
 		    the first time, carry the data along in the URL fragment (#handoff=…,
 		    never sent to a server). play.shikaku.plus's web/index.html receives
 		    it. The old keys stay here as a backup.
-		  - Everyone else (new visitors, crawlers) sees this page.
+		  - Everyone else (new visitors, crawlers) sees this page, and so does a
+		    returning player who opens shikaku.plus/?home or comes from /blog.
 		-->
 		<script>
 			(function () {
@@ -22,6 +23,9 @@
 					if (location.hostname !== 'shikaku.plus' || location.pathname !== '/') return;
 					var q = new URLSearchParams(location.search);
 					var appLink = q.has('seed') || q.has('support');
+					// Ways to see this page as a returning player: shikaku.plus/?home, or
+					// arriving from another page of this site (the wordmark on /blog).
+					if (!appLink && (q.has('home') || document.referrer.indexOf('https://shikaku.plus/') === 0)) return;
 					var ls = window.localStorage;
 					var keys = [];
 					for (var i = 0; i < ls.length; i++) {
@@ -30,10 +34,10 @@
 					}
 					if (!appLink && keys.length === 0) return;
 					var hash = '';
-					// The handoff window closes 2026-11-29 00:00 Philippine Time (14 days
-					// after the swap, Krischan 2026-11-14). After that, returning players
-					// still go straight into the game, just without their old data.
-					var HANDOFF_ENDS = Date.UTC(2026, 10, 28, 16, 0, 0);
+					// The handoff window closes 2026-12-01 00:00 Philippine Time
+					// (Krischan, 2026-11-14). After that, returning players still go
+					// straight into the game, just without their old data.
+					var HANDOFF_ENDS = Date.UTC(2026, 10, 30, 16, 0, 0);
 					if (keys.length && Date.now() < HANDOFF_ENDS && !ls.getItem('shikaku-handoff-done')) {
 						var data = {};
 						for (var j = 0; j < keys.length; j++) data[keys[j]] = ls.getItem(keys[j]);
