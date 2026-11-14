@@ -7,6 +7,17 @@ import { env } from '$env/dynamic/public';
 import { cleanSupabaseUrl } from '$lib/supabaseUrl.js';
 
 export async function handle({ event, resolve }) {
+	// After the domain swap (shikaku-plus-info decision 0024), go.shikaku.plus is
+	// an old address: every URL goes permanently to the same path on
+	// shikaku.plus. Shipped apps link to go.shikaku.plus/privacy-policy,
+	// /terms-of-service, /data-deletion and /support (lib/external_links.dart).
+	if (event.url.hostname === 'go.shikaku.plus') {
+		return new Response(null, {
+			status: 301,
+			headers: { Location: `https://shikaku.plus${event.url.pathname}${event.url.search}` }
+		});
+	}
+
 	const url = cleanSupabaseUrl(env.PUBLIC_SUPABASE_URL);
 	const key = env.PUBLIC_SUPABASE_ANON_KEY;
 
