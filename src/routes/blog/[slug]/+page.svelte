@@ -1,10 +1,36 @@
 <script>
+	import { page } from '$app/state';
+	import { jsonLd } from '$lib/jsonld.js';
+
 	let { data } = $props();
 	const fmt = (/** @type {string} */ d) =>
 		new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+	// Structured data: marks the page as a blog post with its dates, so search
+	// engines can show it as an article and know when it last changed.
+	const structuredData = $derived.by(() => {
+		const origin = page.url.origin;
+		return jsonLd({
+			'@context': 'https://schema.org',
+			'@type': 'BlogPosting',
+			headline: data.post.title,
+			...(data.post.excerpt ? { description: data.post.excerpt } : {}),
+			datePublished: data.post.created_at,
+			dateModified: data.post.updated_at ?? data.post.created_at,
+			mainEntityOfPage: `${origin}${page.url.pathname}`,
+			image: `${origin}/og.png`,
+			author: { '@type': 'Organization', name: 'Shikaku+', url: `${origin}/` },
+			publisher: {
+				'@type': 'Organization',
+				name: 'Shikaku+',
+				logo: { '@type': 'ImageObject', url: `${origin}/icon-512.png` }
+			}
+		});
+	});
 </script>
 
 <svelte:head>
+	{@html structuredData}
 	<title>{data.post.title} · Shikaku+</title>
 	{#if data.post.excerpt}<meta name="description" content={data.post.excerpt} />{/if}
 	<meta property="og:title" content={data.post.title} />

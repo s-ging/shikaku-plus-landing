@@ -4,7 +4,7 @@ export async function load({ params, locals: { supabase } }) {
 	if (!supabase) throw error(404, 'Post not found');
 	const { data: post } = await supabase
 		.from('posts')
-		.select('title, excerpt, content_html, created_at')
+		.select('title, excerpt, content_html, created_at, updated_at')
 		.eq('slug', params.slug)
 		.eq('published', true)
 		.single();

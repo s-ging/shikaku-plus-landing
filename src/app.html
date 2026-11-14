@@ -11,10 +11,23 @@
 		     real domain. Don't hardcode them here — duplicates conflict. -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<!-- Fonts load without blocking the first paint: the browser fetches the
+		     stylesheet early (preload) and applies it once it arrives, showing the
+		     fallback fonts from tokens.css until then. This was ~590ms of
+		     render-blocking on mobile (PageSpeed, 2026-11-14). Next step: self-host
+		     woff2 subsets of the two faces. -->
 		<link
+			rel="preload"
+			as="style"
 			href="https://fonts.googleapis.com/css2?family=Shippori+Antique+B1&family=Shippori+Mincho+B1:wght@600;700&display=swap"
-			rel="stylesheet"
+			onload="this.onload=null;this.rel='stylesheet'"
 		/>
+		<noscript>
+			<link
+				rel="stylesheet"
+				href="https://fonts.googleapis.com/css2?family=Shippori+Antique+B1&family=Shippori+Mincho+B1:wght@600;700&display=swap"
+			/>
+		</noscript>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

@@ -1,0 +1,25 @@
+# Shikaku+
+
+> Shikaku+ is a free puzzle game built on Shikaku, the Nikoli logic puzzle: split the grid into rectangles so that each rectangle holds exactly one number, and that number equals the rectangle's area. Play it in a web browser or on Android.
+
+## Play
+
+- [Play in your browser](https://shikaku.plus): the full game, no install
+- [Google Play (Android)](https://play.google.com/store/apps/details?id=plus.shikaku.app)
+- [Shikaku+ VS, public beta](https://vs.shikaku.plus): head-to-head Shikaku+ in the browser
+- [Learn VS](https://vs.shikaku.plus/learn): the interactive VS tutorial
+
+## What's in the game
+
+- Rulesets: Classic Shikaku, and Hokan, where part of the solution is already on the board as locked anchors and you fill the gaps from a tray of piece sizes
+- Modes: Zen, Time Attack, Blitz, and a Daily Puzzle that changes every day at 06:00 Philippine Time
+- Help Me!: send a board to a friend as a link; they can solve it with no login and no install, then send it back so you can see how it was solved
+- Shikaku+ VS: two players race the same boards; clearing boards sends hazards (mines and frozen cells) to the other side
+- Badges, player tags, profiles and leaderboards
+
+## More
+
+- [About and credits](/about)
+- [Blog: patch notes and updates](/blog)
+- [Privacy policy](/privacy-policy)
+- [Terms of service](/terms-of-service)

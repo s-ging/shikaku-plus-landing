@@ -13,8 +13,56 @@
 	import { dailyGrid, dailySeed, dailyDateLabel } from '$lib/daily.js';
 	import { loadProgress, saveProgress, rectsFromProgress, pruneOld } from '$lib/storage.js';
 	import { fetchGlobalBoardsSolved } from '$lib/boardsSolved.js';
+	import { page } from '$app/state';
+	import { jsonLd, PLAY_STORE_URL } from '$lib/jsonld.js';
 
 	const PLAY_URL = 'https://shikaku.plus'; // → full Flutter web app
+
+	// Structured data for the home page: the site, who makes it, and the game.
+	// The description reuses the page's meta description word for word, so the
+	// copy stays Krischan's. Absolute URLs come from the request's origin, like
+	// the canonical tag, so they follow the landing page to shikaku.plus.
+	const DESCRIPTION =
+		'Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today.';
+	const structuredData = $derived.by(() => {
+		const origin = page.url.origin;
+		return jsonLd({
+			'@context': 'https://schema.org',
+			'@graph': [
+				{
+					'@type': 'WebSite',
+					'@id': `${origin}/#website`,
+					name: 'Shikaku+',
+					url: `${origin}/`,
+					publisher: { '@id': `${origin}/#org` }
+				},
+				{
+					'@type': 'Organization',
+					'@id': `${origin}/#org`,
+					name: 'Shikaku+',
+					url: `${origin}/`,
+					logo: `${origin}/icon-512.png`,
+					sameAs: [PLAY_STORE_URL]
+				},
+				{
+					'@type': ['VideoGame', 'SoftwareApplication'],
+					'@id': `${origin}/#game`,
+					name: 'Shikaku+',
+					description: DESCRIPTION,
+					url: PLAY_URL,
+					image: `${origin}/og.png`,
+					genre: ['Puzzle', 'Logic puzzle'],
+					gamePlatform: ['Web browser', 'Android'],
+					operatingSystem: 'Android, Web',
+					applicationCategory: 'GameApplication',
+					playMode: ['SinglePlayer', 'CoOp', 'MultiPlayer'],
+					installUrl: PLAY_STORE_URL,
+					offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+					publisher: { '@id': `${origin}/#org` }
+				}
+			]
+		});
+	});
 
 	/**
 	 * Round a raw solved-count DOWN to a clean bucket so the displayed figure is
@@ -108,6 +156,7 @@
 </script>
 
 <svelte:head>
+	{@html structuredData}
 	<title>Shikaku+ — Complete squares with friends</title>
 	<meta
 		name="description"

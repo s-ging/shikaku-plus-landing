@@ -4,7 +4,13 @@
 		new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 </script>
 
-<svelte:head><title>Blog · Shikaku+</title></svelte:head>
+<svelte:head>
+	<title>Blog · Shikaku+</title>
+	<!-- Placeholder wording for Krischan to rewrite; the page had no description. -->
+	<meta name="description" content="Patch notes and updates from Shikaku+." />
+	<meta property="og:title" content="Blog · Shikaku+" />
+	<meta property="og:description" content="Patch notes and updates from Shikaku+." />
+</svelte:head>
 
 <main class="wrap">
 	<header class="head">
