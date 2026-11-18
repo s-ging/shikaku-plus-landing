@@ -9,11 +9,13 @@
 		  not on /blog or other pages):
 		  - Help Me! links (?seed=…) and ?support belong to the game: send them on
 		    with the query untouched.
-		  - A returning player has the old game's data (flutter.* keys) on this
-		    origin: send them straight into the game (Krischan, 2026-11-14), and
-		    the first time, carry the data along in the URL fragment (#handoff=…,
-		    never sent to a server). play.shikaku.plus's web/index.html receives
-		    it. The old keys stay here as a backup.
+		  - A returning player with the old game's data (flutter.* keys) on this
+		    origin is sent into the game ONCE, carrying the data in the URL
+		    fragment (#handoff=…, never sent to a server; play.shikaku.plus's
+		    web/index.html receives it). After that (shikaku-handoff-done is set),
+		    or once the handoff window has closed, this browser sees this page
+		    like anyone else (Krischan, 2026-11-18: "if the browser already did
+		    it once it shouldn't do it again"). The old keys stay here as a backup.
 		  - Everyone else (new visitors, crawlers) sees this page, and so does a
 		    returning player who opens shikaku.plus/?home or comes from /blog.
 		-->
@@ -32,21 +34,20 @@
 						var k = ls.key(i);
 						if (k && k.indexOf('flutter.') === 0) keys.push(k);
 					}
-					if (!appLink && keys.length === 0) return;
-					var hash = '';
-					// The handoff window closes 2026-12-01 00:00 Philippine Time
-					// (Krischan, 2026-11-14). After that, returning players still go
-					// straight into the game, just without their old data.
+					// The handoff window closes 2026-12-01 00:00 Philippine Time (Krischan, 2026-11-14).
 					var HANDOFF_ENDS = Date.UTC(2026, 10, 30, 16, 0, 0);
-					if (keys.length && Date.now() < HANDOFF_ENDS && !ls.getItem('shikaku-handoff-done')) {
+					// Only a browser whose data hasn't gone over yet is sent on; done once, it stays here.
+					var handoff = keys.length > 0 && Date.now() < HANDOFF_ENDS && !ls.getItem('shikaku-handoff-done');
+					if (!appLink && !handoff) return;
+					var hash = '';
+					if (handoff) {
 						var data = {};
 						for (var j = 0; j < keys.length; j++) data[keys[j]] = ls.getItem(keys[j]);
 						var packed = encodeURIComponent(JSON.stringify(data));
 						// Stay far below browsers' URL limits; past this, skip the handoff.
-						if (packed.length < 1500000) {
-							hash = '#handoff=' + packed;
-							ls.setItem('shikaku-handoff-done', String(Date.now()));
-						}
+						if (packed.length < 1500000) hash = '#handoff=' + packed;
+						// Sent on once either way: too big to carry still counts as done, so it never loops.
+						ls.setItem('shikaku-handoff-done', String(Date.now()));
 					}
 					location.replace('https://play.shikaku.plus/' + location.search + hash);
 				} catch (e) {}

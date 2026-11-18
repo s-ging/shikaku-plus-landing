@@ -1,10 +1,11 @@
 <script>
 	const credits = [
 		{ label: 'Art', value: 'sagings' },
-		{ label: 'Alpha feedback', value: 'nootellart, Peyt, Carrot Man, Frutos' },
+		{ label: 'Alpha feedback', value: 'nootellart, Peyt, Carrot Man, Frutos, pmarieljade' },
 		{
 			label: 'Fonts',
-			value: 'Shippori Antique (subset) & Shippori Mincho (subset), SIL Open Font License 1.1'
+			value:
+				'Shippori Antique (subset), Shippori Mincho (subset) & Inconsolata (subset), SIL Open Font License 1.1'
 		}
 	];
 </script>
@@ -13,6 +14,14 @@
 	<div class="card">
 		<h2 class="heading">Credits</h2>
 		<dl class="credit-list">
+			<!-- The puzzle itself is Nikoli's (Krischan, 2026-11-18): said first, and plainly. -->
+			<div class="credit-row">
+				<dt>Original concept</dt>
+				<dd>
+					Nikoli Co., Ltd. (<a href="https://www.nikoli.co.jp/" target="_blank" rel="noopener noreferrer">nikoli.co.jp</a>)<br />
+					Shikaku is an original puzzle by Nikoli Co., Ltd. Shikaku+ is not affiliated with or endorsed by Nikoli.
+				</dd>
+			</div>
 			{#each credits as c (c.label)}
 				<div class="credit-row">
 					<dt>{c.label}</dt>
@@ -22,7 +31,7 @@
 			<div class="credit-row">
 				<dt>Game code</dt>
 				<dd>
-					Based on <a href="https://github.com/Zaphoood/shikaku" target="_blank" rel="noopener noreferrer">shikaku by Zaphoood</a>, GNU GPL v3.0
+					Based on <a href="https://github.com/Zaphoood/shikaku" target="_blank" rel="noopener noreferrer">shikaku by Mathis Weber (Zaphoood)</a>, MIT License
 				</dd>
 			</div>
 			<div class="credit-row">
@@ -31,8 +40,14 @@
 					Google Material Symbols (<a href="https://fonts.google.com/icons" target="_blank" rel="noopener noreferrer">fonts.google.com/icons</a>)
 				</dd>
 			</div>
+			<div class="credit-row">
+				<dt>Flags</dt>
+				<dd>
+					<a href="https://gitlab.com/catamphetamine/country-flag-icons" target="_blank" rel="noopener noreferrer">country-flag-icons by catamphetamine</a>, MIT License
+				</dd>
+			</div>
 		</dl>
-		<p class="byline">By sagings and nootellart. Current version: 1.26.7.1.</p>
+		<p class="byline">By sagings and nootellart. Current version: 1.26.7.2.</p>
 	</div>
 </section>
 

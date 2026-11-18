@@ -14,7 +14,9 @@
 		{ name: 'timezone', license: 'BSD-style' },
 		{ name: 'url_launcher', license: 'BSD-3-Clause' },
 		{ name: 'web', license: 'BSD-3-Clause' },
-		{ name: 'webview_flutter', license: 'BSD-3-Clause' }
+		{ name: 'webview_flutter', license: 'BSD-3-Clause' },
+		// Not a package: the flags the game loads from assets.shikaku.plus/flags/ (2026-11-18).
+		{ name: 'country-flag-icons (flags)', license: 'MIT', href: 'https://gitlab.com/catamphetamine/country-flag-icons' }
 	].map((lib) => ({ ...lib, href: lib.href ?? `https://pub.dev/packages/${lib.name}` }));
 </script>
 
