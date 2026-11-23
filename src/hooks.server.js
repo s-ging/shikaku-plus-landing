@@ -6,6 +6,12 @@ import { createServerClient } from '@supabase/ssr';
 import { env } from '$env/dynamic/public';
 import { cleanSupabaseUrl } from '$lib/supabaseUrl.js';
 
+/** @type {Record<string, string>} */
+const ALIASES = {
+	'/terms': '/terms-of-service',
+	'/tos': '/terms-of-service'
+};
+
 export async function handle({ event, resolve }) {
 	// After the domain swap (shikaku-plus-info decision 0024), go.shikaku.plus is
 	// an old address: every URL goes permanently to the same path on
@@ -15,6 +21,15 @@ export async function handle({ event, resolve }) {
 		return new Response(null, {
 			status: 301,
 			headers: { Location: `https://shikaku.plus${event.url.pathname}${event.url.search}` }
+		});
+	}
+
+	// Short addresses for the terms (Krischan, 2026-11-23).
+	const alias = ALIASES[event.url.pathname.replace(/\/+$/, '').toLowerCase()];
+	if (alias) {
+		return new Response(null, {
+			status: 301,
+			headers: { Location: `${alias}${event.url.search}` }
 		});
 	}
 
