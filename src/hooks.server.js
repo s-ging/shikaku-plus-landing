@@ -6,10 +6,22 @@ import { createServerClient } from '@supabase/ssr';
 import { env } from '$env/dynamic/public';
 import { cleanSupabaseUrl } from '$lib/supabaseUrl.js';
 
+// Short addresses (Krischan, 2026-11-23). Our own pages move for good (301,
+// query kept); links out are 302 so they can change later without browsers
+// remembering the old target.
 /** @type {Record<string, string>} */
 const ALIASES = {
 	'/terms': '/terms-of-service',
 	'/tos': '/terms-of-service'
+};
+const X = 'https://x.com/shikaku_plus';
+const GOOGLE_PLAY = 'https://play.google.com/store/apps/details?id=plus.shikaku.app';
+/** @type {Record<string, string>} */
+const LINKS_OUT = {
+	'/x': X,
+	'/twitter': X,
+	'/android': GOOGLE_PLAY,
+	'/play_android': GOOGLE_PLAY
 };
 
 export async function handle({ event, resolve }) {
@@ -24,8 +36,12 @@ export async function handle({ event, resolve }) {
 		});
 	}
 
-	// Short addresses for the terms (Krischan, 2026-11-23).
-	const alias = ALIASES[event.url.pathname.replace(/\/+$/, '').toLowerCase()];
+	const path = event.url.pathname.replace(/\/+$/, '').toLowerCase();
+	const out = LINKS_OUT[path];
+	if (out) {
+		return new Response(null, { status: 302, headers: { Location: out } });
+	}
+	const alias = ALIASES[path];
 	if (alias) {
 		return new Response(null, {
 			status: 301,
