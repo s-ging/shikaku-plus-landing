@@ -6,7 +6,7 @@
 /** One-time Foundation, pay what you want. */
 export const FOUNDATION_CHECKOUT = '';
 
-/** Supporter packs: one link holding all six month products. */
+/** Supporter: one product, the buyer picks how many months (Polar unit pricing). */
 export const SUPPORTER_CHECKOUT = '';
 
 /** Badge tiers by amount: keep in sync with lib/iap_catalog.dart in the app. */
@@ -17,14 +17,5 @@ export const FOUNDATION_TIERS = [
 	{ tier: 4, min: 50, name: 'Foundation ★★★★' }
 ];
 
-/** Supporter packs: prices as in lib/iap_catalog.dart. */
-export const SUPPORTER_PACKS = [
-	{ months: 1, usd: '1.99' },
-	{ months: 2, usd: '3.98' },
-	{ months: 3, usd: '5.00' },
-	{ months: 4, usd: '7.96' },
-	{ months: 6, usd: '9.00' },
-	{ months: 12, usd: '15.00' }
-];
 
 export const SUPPORT_EMAIL = 'hello@shikaku.plus';

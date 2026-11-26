@@ -1,0 +1,90 @@
+# Words for shikaku.plus/support, /support/thanks and the purchase emails.
+#
+# How to edit: change the text under a [name] line. Leave the [name] lines as
+# they are. Lines starting with # are notes and never show.
+# - A blank line starts a new paragraph.
+# - A line starting with "- " is a bullet point.
+# - Links: [text](https://...) or [text](/terms-of-service) or [text](mailto:...)
+# - Words in {curly braces} are filled in for you. Keep them, move them around.
+# The site updates about a minute after you save. If something is missing
+# here, the built-in wording is used.
+
+[page.intro]
+Shikaku+ is free and made by one person. Supporting it unlocks player-tag editing and a badge on your account.
+
+[foundation.title]
+Foundation
+
+[foundation.body]
+One time, pay what you want. Edit your player tag for good, and wear the Foundation badge for what you paid.
+
+[foundation.button]
+Get Foundation
+
+[supporter.title]
+Supporter
+
+[supporter.body]
+Pick how many months at checkout. You pay once (no subscription). Edit your player tag while it lasts, and wear the Supporter badge. Months add up.
+
+[supporter.prices]
+# One line per price. Prices at checkout are in your local currency.
+- 1 month: $1.99
+
+[supporter.button]
+Become a Supporter
+
+[how.title]
+How it reaches your account
+
+[how.points]
+- Pay with the email of your Shikaku+ account, or type your player tag in the checkout. You need an account: guests can't hold perks.
+- It usually takes under a minute. You get an email when it's on your account; open or restart the game to see it.
+- On Android, buy in the app through Google Play instead.
+- Payments are handled by Polar, our reseller and merchant of record. Purchases are final, except where the law or [Polar's buyer terms](https://polar.sh/legal/checkout-buyer-terms) require a refund. See our [Terms of Service](/terms-of-service).
+- Something wrong? Email [hello@shikaku.plus](mailto:hello@shikaku.plus).
+
+[thanks.title]
+Thank you
+
+[thanks.body]
+Your payment went through. Thanks for supporting Shikaku+.
+
+Your perk is being added to your account; it usually takes under a minute. We'll email you when it's there. Then open the game, or restart it if it's already open.
+
+No email within 10 minutes? Check your spam folder, then write to [hello@shikaku.plus](mailto:hello@shikaku.plus) with your player tag.
+
+# ─── Emails ──────────────────────────────────────────────────────────────────
+# Filled in for you: {label} what they bought ("Foundation ★★", "Supporter,
+# 3 months"), {who} their name and tag, {months} like "3 months".
+
+[email.paid.subject]
+{label} is on your Shikaku+ account
+
+[email.paid.foundation]
+Thanks for supporting Shikaku+.
+
+{label} is now on {who}. You can edit your player tag for good, and the Foundation badge is yours.
+
+Open the game at https://play.shikaku.plus (or restart the app) to see it.
+
+Wrong account, or something missing? Reply to this email.
+
+[email.paid.supporter]
+Thanks for supporting Shikaku+.
+
+{label} is now on {who}. You can edit your player tag for the next {months}, and the Supporter badge is yours.
+
+Open the game at https://play.shikaku.plus (or restart the app) to see it.
+
+Wrong account, or something missing? Reply to this email.
+
+[email.unmatched.subject]
+Your Shikaku+ purchase: which account is it for?
+
+[email.unmatched.body]
+Thanks for supporting Shikaku+. Your payment for {label} went through.
+
+We couldn't find a Shikaku+ account with this email address, so the perk is waiting for you.
+
+Reply to this email with your player tag (Profile, under your name) and we will add it to your account. No account yet? Make one in the game at https://play.shikaku.plus, then reply with your tag.

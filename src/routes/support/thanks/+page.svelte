@@ -1,7 +1,11 @@
 <script>
 	// /support/thanks: Polar's success URL. It confirms nothing by itself: the
 	// polar-webhook edge function grants the perk and emails the buyer.
-	import { SUPPORT_EMAIL } from '$lib/checkout.js';
+	import copyText from '$lib/copy/support.txt?raw';
+	import { parseCopy, blocks } from '$lib/copy/parse.js';
+
+	// Words live in src/lib/copy/support.txt.
+	const copy = parseCopy(copyText);
 </script>
 
 <svelte:head>
@@ -16,16 +20,8 @@
 
 	<main>
 		<article class="doc">
-			<h1>Thank you</h1>
-			<p class="lead">Your payment went through. Thanks for supporting Shikaku+.</p>
-			<p>
-				Your perk is being added to your account; it usually takes under a minute. We'll email you
-				when it's there. Then open the game, or restart it if it's already open.
-			</p>
-			<p>
-				No email within 10 minutes? Check your spam folder, then write to
-				<a href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a> with your player tag.
-			</p>
+			<h1>{copy['thanks.title'] || 'Thank you'}</h1>
+			<div class="lead">{@html blocks(copy['thanks.body'] || '')}</div>
 			<p><a class="play" href="https://play.shikaku.plus">Open Shikaku+</a></p>
 		</article>
 
