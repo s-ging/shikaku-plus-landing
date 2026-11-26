@@ -32,18 +32,17 @@
 		<h2>Service overview</h2>
 		<p>
 			Shikaku+ is a puzzle game service. Users may play the game, create accounts, sign in using
-			supported OAuth providers, view gameplay statistics, and optionally make one-time donations to
-			support development.
+			supported OAuth providers, view gameplay statistics, and optionally buy supporter perks.
 		</p>
 
 		<h2>Eligibility</h2>
 		<p>
 			You must be able to enter into a binding agreement to use this service. If local law requires a
-			minimum age for online services or donations, you must meet that requirement.
+			minimum age for online services or purchases, you must meet that requirement.
 		</p>
 
 		<h2>Accounts</h2>
-		<p>You may create an account without donating.</p>
+		<p>You may create an account without buying anything.</p>
 		<p>You are responsible for:</p>
 		<ul>
 			<li>Keeping your login credentials secure.</li>
@@ -63,19 +62,30 @@
 			manage your account.
 		</p>
 
-		<h2>Donations and supporter status</h2>
-		<p>Donations are optional.</p>
-		<p>If you make a donation:</p>
+		<h2>Purchases and supporter perks</h2>
+		<p>
+			Purchases are optional. We sell Foundation (a one-time purchase, pay what you want) and
+			Supporter (a number of months, bought once each time; not a subscription). They unlock
+			player-tag editing and a badge on your Shikaku+ account.
+		</p>
 		<ul>
-			<li>Donations are one-time only for now.</li>
-			<li>Donations are final and non-refundable unless required by law.</li>
 			<li>
-				Donation status may be linked to an account if the same email address is used.
+				On the web, purchases are sold by <strong>Polar</strong> (polar.sh), our reseller and merchant
+				of record, under <a href="https://polar.sh/legal/checkout-buyer-terms">Polar's buyer terms</a
+				>. On Android, purchases go through Google Play.
 			</li>
-			<li>Supporter status does not give ownership of the service.</li>
+			<li>
+				Purchases are final and non-refundable, except where the law or the seller's terms (Polar or
+				Google Play) require a refund. If a purchase is refunded, its perks may be removed.
+			</li>
+			<li>
+				A purchase is linked to the Shikaku+ account with the same email address, or the account
+				whose player tag you enter at checkout. You need a registered account to hold perks.
+			</li>
+			<li>Perks are a license to use features in the game, not ownership of the service.</li>
 			<li>Supporter perks, badges, or recognition may change over time.</li>
 		</ul>
-		<p>We may use donation records to confirm supporter status and related account features.</p>
+		<p>We use purchase records to confirm supporter status and related account features.</p>
 
 		<h2>User conduct</h2>
 		<p>You agree not to:</p>
@@ -111,17 +121,10 @@
 		</p>
 		<p>You may not copy, resell, or exploit the service content without permission.</p>
 
-		<h2>Crypto donations</h2>
-		<p>
-			If crypto donations are supported, you are responsible for sending funds to the correct wallet
-			or payment address. We are not responsible for user errors in sending crypto, transaction
-			delays, or blockchain network issues.
-		</p>
-
 		<h2>Service changes</h2>
 		<p>
 			We may add, remove, pause, or change features at any time. This includes supporter features,
-			account features, gameplay systems, statistics, and donation flows.
+			account features, gameplay systems, statistics, and purchase flows.
 		</p>
 
 		<h2>Termination</h2>

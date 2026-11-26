@@ -50,7 +50,7 @@
 				OAuth account information from Meta, Google, or Discord, if you choose to sign in through
 				those providers.
 			</li>
-			<li>Donation status and supporter status.</li>
+			<li>Purchase and supporter status.</li>
 			<li>Opt-in status for emails, supporter perks, updates, or related communications.</li>
 			<li>Gameplay statistics and service usage information.</li>
 			<li>
@@ -60,8 +60,9 @@
 		</ul>
 		<p>
 			We do not intentionally collect credit card numbers, debit card numbers, or bank account
-			details through our website. If you make a crypto donation, the payment is handled through the
-			external wallet or payment service you use, not by us directly.
+			details. Web purchases are processed by Polar (polar.sh), our merchant of record, which shares
+			with us the order, the email address and name you gave at checkout, and anything you typed into
+			its checkout fields (such as your player tag). Android purchases are processed by Google Play.
 		</p>
 
 		<h2>How we use your information</h2>
@@ -69,9 +70,9 @@
 		<ul>
 			<li>Create and manage user accounts.</li>
 			<li>Let you sign in through supported OAuth providers.</li>
-			<li>Track donation status and supporter status.</li>
+			<li>Track purchase and supporter status.</li>
 			<li>
-				Connect donations to accounts when the same email address is used.
+				Connect purchases to accounts by email address or player tag.
 			</li>
 			<li>Store opt-in choices.</li>
 			<li>Record gameplay statistics, progress, and related service data.</li>
@@ -79,22 +80,22 @@
 			<li>Send important service-related messages.</li>
 		</ul>
 
-		<h2>Donation linking</h2>
+		<h2>Purchase linking</h2>
 		<p>
-			If you donate using an email address, we may use that email address to later connect your
-			donation to a Shikaku+ account, supporter badge, or related perks. This is used to keep
-			supporter status and account identity aligned.
+			When you buy supporter perks, we use the email address and any player tag from the checkout to
+			find your Shikaku+ account and add the perks to it, and we email you when it's done. If we can't
+			find your account, we keep the order and email you to ask which account it's for.
 		</p>
 
 		<h2>Data storage and third parties</h2>
-		<p>We may store data using third-party services such as Supabase and Google Sheets.</p>
+		<p>We may store data using third-party services such as Supabase.</p>
 		<p>We may also rely on third-party providers for:</p>
 		<ul>
 			<li>Authentication.</li>
 			<li>Database and storage services.</li>
 			<li>Email delivery.</li>
 			<li>Website hosting.</li>
-			<li>Crypto payment handling, if used.</li>
+			<li>Payment processing (Polar for web purchases, Google Play on Android).</li>
 		</ul>
 		<p>
 			These providers may process information on our behalf under their own privacy terms.

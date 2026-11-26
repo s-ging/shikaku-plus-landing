@@ -5,7 +5,7 @@
 // /admin is left out on purpose. If Supabase isn't configured, the static
 // pages still list.
 
-const STATIC_PATHS = ['/', '/about', '/blog', '/privacy-policy', '/terms-of-service', '/data-deletion'];
+const STATIC_PATHS = ['/', '/about', '/support', '/blog', '/privacy-policy', '/terms-of-service', '/data-deletion'];
 
 /** @param {string} s */
 const esc = (s) =>

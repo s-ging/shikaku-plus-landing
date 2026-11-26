@@ -6,9 +6,6 @@
 	import About from '$lib/About.svelte';
 	import Changelog from '$lib/Changelog.svelte';
 	import Roadmap from '$lib/Roadmap.svelte';
-	import Support from '$lib/Support.svelte';
-	import SupportRewards from '$lib/SupportRewards.svelte';
-	import SupportCountdown from '$lib/SupportCountdown.svelte';
 	import AboutHokan from '$lib/AboutHokan.svelte';
 	import { dailyGrid, dailySeed, dailyDateLabel } from '$lib/daily.js';
 	import { loadProgress, saveProgress, rectsFromProgress, pruneOld } from '$lib/storage.js';
@@ -273,18 +270,24 @@
 		<div class="left-col">
 			<About />
 			<AboutHokan />
-			<Support />
+			<!-- Was the donation bar, payment methods and Foundation countdown; payments
+			     moved to Polar on /support (Kris, 2026-11-26). The old components are
+			     still in src/lib, unused. -->
+			<a class="support-link" href="/support">
+				<span class="support-link-title">Support Shikaku+</span>
+				<span class="support-link-sub">Foundation and Supporter: edit your player tag, wear a badge.</span>
+			</a>
 		</div>
 		<div class="right-col">
 			<Roadmap />
-			<SupportRewards />
 		</div>
-		<SupportCountdown />
 	</section>
 
 	<footer class="footer">
 		<nav class="legal-links">
 			<a href="/blog">Blog</a>
+			<span class="sep">·</span>
+			<a href="/support">Support</a>
 			<span class="sep">·</span>
 			<a href="/privacy-policy">Privacy Policy</a>
 			<span class="sep">·</span>
@@ -584,5 +587,28 @@
 		.two-col :global(.support-grid) { order: 4; }
 		.two-col :global(.rewards-card) { order: 5; }
 		.two-col :global(.deadline-card) { order: 6; }
+	}
+	.support-link {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 16px 20px;
+		border-radius: var(--radius);
+		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
+		text-decoration: none;
+	}
+	.support-link:hover {
+		border-color: color-mix(in srgb, var(--text-primary) 20%, transparent);
+	}
+	.support-link-title {
+		font-family: var(--font-ui);
+		font-size: 22px;
+		letter-spacing: -0.8px;
+		color: var(--text-primary);
+	}
+	.support-link-sub {
+		font-size: 15px;
+		color: var(--text-secondary);
 	}
 </style>
