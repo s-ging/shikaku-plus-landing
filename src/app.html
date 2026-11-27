@@ -34,8 +34,8 @@
 						var k = ls.key(i);
 						if (k && k.indexOf('flutter.') === 0) keys.push(k);
 					}
-					// The handoff window closes 2026-12-01 00:00 Philippine Time (Krischan, 2026-11-14).
-					var HANDOFF_ENDS = Date.UTC(2026, 10, 30, 16, 0, 0);
+					// The handoff window closes 2026-12-15 00:00 Philippine Time (Krischan, 2026-11-14; moved 2026-11-27).
+					var HANDOFF_ENDS = Date.UTC(2026, 11, 14, 16, 0, 0);
 					// Only a browser whose data hasn't gone over yet is sent on; done once, it stays here.
 					var handoff = keys.length > 0 && Date.now() < HANDOFF_ENDS && !ls.getItem('shikaku-handoff-done');
 					if (!appLink && !handoff) return;
