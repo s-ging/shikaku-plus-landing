@@ -9,6 +9,7 @@ export const HAND_BADGES = [
 	{ id: 'beta', name: 'Beta Tester' },
 	{ id: 'feedback', name: 'Contributor' },
 	{ id: 'prevs', name: 'PreVS' },
+	{ id: '26_vol_0', name: 'Ed. 26 • Volume 0' },
 	{ id: 'supporter_1', name: 'Supporter I' },
 	{ id: 'supporter_2', name: 'Supporter II' },
 	{ id: 'supporter_3', name: 'Supporter III' },
