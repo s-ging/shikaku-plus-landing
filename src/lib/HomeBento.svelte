@@ -462,7 +462,8 @@
 	.get { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding: 20px; }
 	.get .h2 { font-size: 24px; }
 	.get-row { display: flex; flex-wrap: nowrap; gap: 10px; align-items: center; }
-	.posts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+	/* Two cards a row when there's room, one when the column gets narrow. */
+	.posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 10px; }
 	.post {
 		display: flex;
 		flex-direction: column;
@@ -477,11 +478,12 @@
 	}
 	.post:hover { border-color: color-mix(in srgb, var(--button-fill) 50%, transparent); }
 	.post:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; }
-	.post-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-	.post-type { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; }
+	.post-meta { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 8px; min-width: 0; }
+	.post-meta .xsmall { white-space: nowrap; }
+	.post-type { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
 	.post-type.announcement { color: var(--button-fill); }
 	.post-type.patch_notes { color: #a090c0; }
-	.post-title { font-size: 15px; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+	.post-title { overflow-wrap: anywhere; font-size: 15px; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 	.post-excerpt { font-size: 13px; line-height: 1.5; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 	.store-badge, .btn-outline { flex: 0 0 auto; width: 150px; height: 45px; box-sizing: border-box; }
 	.store-badge img { display: block; width: 150px; height: 45px; }
