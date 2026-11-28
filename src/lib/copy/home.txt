@@ -1,0 +1,304 @@
+# Words for the homepage, shikaku.plus.
+#
+# How to edit: change the text under a [name] line. Leave the [name] lines as
+# they are. Lines starting with # are notes and never show.
+# - A blank line starts a new paragraph.
+# - A line starting with "- " is a bullet point.
+# - Links: [text](https://...) or [text](/about)
+# - Text in [square brackets] with no link is a placeholder still to fill in.
+#   Give a placeholder a space ([amount raised], not [raised]): a lone word in
+#   brackets on its own line reads as a new section name.
+# The site updates about a minute after you save. Empty or missing = hidden
+# (or the built-in wording for buttons).
+
+# ─── Hero ────────────────────────────────────────────────────────────────────
+
+[hero.tagline]
+Complete squares with friends.
+
+[hero.play]
+Play now
+
+[hero.vs]
+Play VS
+
+[hero.solved]
+puzzles solved by players worldwide
+
+[hero.facts]
+Free · No ads · Browser and Android · 9MB
+
+[hero.board_note]
+New puzzle every day, at 6:00 AM Philippine Time.
+
+# ─── Changelog ───────────────────────────────────────────────────────────────
+
+[changelog.title]
+Changelog
+
+[changelog.badge]
+Latest
+
+[changelog.date]
+November 14, 2026
+
+[changelog.left.title]
+Shikaku+ VS
+
+[changelog.left.points]
+- Public beta is open at [vs.shikaku.plus](https://vs.shikaku.plus).
+- New to VS? The tutorial at [vs.shikaku.plus/learn](https://vs.shikaku.plus/learn) walks you through a match.
+- Sound: choose Off, Minimal or Full.
+
+[changelog.right.title]
+Website
+
+[changelog.right.points]
+- shikaku.plus is now the home page. The game lives at [play.shikaku.plus](https://play.shikaku.plus).
+- Returning players go straight into the game. Saved data comes along until December 15.
+- Help Me! links on shikaku.plus still open the game.
+
+[changelog.more]
+[All updates on the blog →](/blog)
+
+# ─── Where it's at ───────────────────────────────────────────────────────────
+# Status is one of: shipped, building, planned.
+
+[roadmap.title]
+Where it’s at
+
+[roadmap.1.status]
+shipped
+[roadmap.1.label]
+Shipped
+[roadmap.1.title]
+Shikaku+ VS public beta
+[roadmap.1.body]
+On the web at vs.shikaku.plus.
+
+[roadmap.2.status]
+building
+[roadmap.2.label]
+Building now
+[roadmap.2.title]
+VS in the app
+[roadmap.2.body]
+The next app update brings VS and online play to Android.
+
+[roadmap.3.status]
+planned
+[roadmap.3.label]
+Planned
+[roadmap.3.title]
+Ranked · Vol. 1 · 2027
+[roadmap.3.body]
+The first ranked VS season.
+
+# ─── Help Me! ────────────────────────────────────────────────────────────────
+
+[help.title]
+Stuck? Send it to a friend.
+
+[help.body]
+On a 16×16 Brutal, you will get stuck. Help Me! turns your half-done board into a link. Your friend picks it up with Let Me Help!, places what they can, and passes it on. Every name it goes through stays with the board.
+
+[help.example.title]
+16×16 · Brutal · solved by 3 people
+
+[help.example.tag]
+Example
+
+[help.example.1]
+You | 23 boxes, then Help Me!
+
+[help.example.2]
+A friend | 18 boxes, passed it on
+
+[help.example.3]
+Their friend | 11 boxes, solved it
+
+[help.button]
+Try a 16×16 Brutal
+
+# ─── Modes ───────────────────────────────────────────────────────────────────
+
+[modes.title]
+Modes
+
+[modes.zen]
+Zen | No clock
+
+[modes.time_attack]
+Time Attack | 10 games to unlock
+
+[modes.blitz]
+Blitz | 50 games to unlock
+
+[modes.note]
+Every mode plays Classic or Hokan, 6×6 to 16×16, Easy to Brutal.
+
+# ─── VS ──────────────────────────────────────────────────────────────────────
+
+[vs.badge]
+NEW · Public beta
+
+[vs.body]
+Then race them. You and your opponent solve side by side. Clear a board and it sends Mines to theirs. They freeze yours back with ice.
+
+[vs.standard]
+Standard | 3 Stock a round.
+
+[vs.knockout]
+Knockout | 1 Stock a round.
+
+[vs.plates]
+[Your rank plates]
+
+[vs.play]
+Play VS
+
+[vs.learn]
+Learn how VS works
+
+[vs.video.title]
+Watch the VS beta trailer
+
+[vs.video.note]
+[Promo video goes here]
+
+[ascent.mark]
+[Shikaku+ ASCENT mark]
+
+[ascent.body]
+Open qualifier cups. Anyone can enter, with Supporter vouchers to win and a path to Summit.
+
+[ascent.date]
+[Next cup date] →
+
+[summit.mark]
+[Shikaku+ SUMMIT 27 mark]
+
+[summit.body]
+The grand prix championship. The best from Ascent meet to crown the Shikaku+ Summit champion.
+
+[summit.date]
+[2027 · dates] →
+
+# ─── Foundation ──────────────────────────────────────────────────────────────
+# Payments are parked: the button goes to /support ("Coming soon" there).
+# Goal lines: "amount | what it unlocks", one per line.
+
+[foundation.badge]
+Rerun
+
+[foundation.dates]
+[Rerun dates]
+
+[foundation.title]
+Foundation is back.
+
+[foundation.body]
+Foundation is open again. Support Shikaku+ and every bit goes straight into the game.
+
+[foundation.raised]
+[amount raised]
+
+[foundation.goal]
+of [goal]
+
+[foundation.goals]
+$25 | Google Play Store launch
+$100 | iOS App Store launch
+$200 | Friend System
+$300 | Replay System
+$500 | Full client-side customization
+
+[foundation.button]
+Support the project
+
+[foundation.methods]
+Opening soon.
+
+[foundation.countdown.label]
+Foundation closes in
+
+[foundation.countdown]
+[DD : HH : MM : SS]
+
+[foundation.rewards.title]
+Your support, rewarded
+
+[foundation.rewards.body]
+A Foundation badge next to your name in public rooms, Help Me! and Let Me Help!, and Shikaku+ VS.
+
+[foundation.tier.1]
+Any amount
+[foundation.tier.2]
+$5 or more
+[foundation.tier.3]
+$20 or more
+[foundation.tier.4]
+$50 or more
+
+# ─── About, Hokan, Get it ────────────────────────────────────────────────────
+
+[about.title]
+About Shikaku+
+
+[about.body]
+Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku.
+
+The core mechanic is simple: partition a grid into rectangles so each rectangle contains exactly one number, and the rectangle’s area matches that number.
+
+[about.more]
+[Read more →](/about)
+
+[hokan.title]
+About Shikaku Hokan
+
+[hokan.body]
+I thought, Shikaku was hard enough. How can we make it harder?
+
+There’s some given blocks across the board, but now we’ve taken the numbers and it’s your game to make these numbers fit in the board now.
+
+From analysis to deduction. It’s pretty clean, you should try it!
+
+[get.title]
+9MB. Plays offline. Works on old phones.
+
+[get.android]
+Get it on Google Play
+
+[get.browser]
+Play in your browser
+
+# ─── Questions ───────────────────────────────────────────────────────────────
+# "Q: " starts a question, "A: " its answer. Add or remove pairs freely.
+
+[faq.title]
+Questions
+
+[faq]
+Q: Is Shikaku+ free?
+A: Yes. Free to play, with no ads.
+
+Q: Can I play with friends?
+A: Yes. Send a Help Me! link to finish a board together, or race each other in Shikaku+ VS.
+
+Q: Does it work offline?
+A: Yes. The Android app plays without a connection.
+
+Q: How big is it?
+A: About 9.7MB to download from Google Play. In the browser there is nothing to install.
+
+Q: Do I need an account?
+A: No, you can play as a guest. An account keeps your badges, stats and player tag.
+
+Q: Is there an iPhone app?
+A: Not yet. On an iPhone, play in the browser at play.shikaku.plus.
+
+Q: What is Shikaku?
+A: A Japanese logic puzzle by Nikoli. Shikaku (四角) means square. You split the grid into rectangles, each holding exactly one number equal to its area.
+
+Q: What is Hokan?
+A: Hokan (補完) means completion. Part of the board comes filled in, and you fit a tray of box sizes into the gaps.

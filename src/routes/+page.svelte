@@ -3,10 +3,9 @@
 	import { browser } from '$app/environment';
 	import Board from '$lib/Board.svelte';
 	import SolvedOverlay from '$lib/SolvedOverlay.svelte';
-	import About from '$lib/About.svelte';
-	import Changelog from '$lib/Changelog.svelte';
-	import Roadmap from '$lib/Roadmap.svelte';
-	import AboutHokan from '$lib/AboutHokan.svelte';
+	import HomeBento from '$lib/HomeBento.svelte';
+	import homeCopy from '$lib/copy/home.txt?raw';
+	import { parseCopy } from '$lib/copy/parse.js';
 	import { dailyGrid, dailySeed, dailyDateLabel } from '$lib/daily.js';
 	import { loadProgress, saveProgress, rectsFromProgress, pruneOld } from '$lib/storage.js';
 	import { fetchGlobalBoardsSolved } from '$lib/boardsSolved.js';
@@ -14,6 +13,10 @@
 	import { jsonLd, PLAY_STORE_URL } from '$lib/jsonld.js';
 
 	const PLAY_URL = 'https://play.shikaku.plus'; // → full Flutter web app
+	const VS_URL = 'https://vs.shikaku.plus';
+	// Homepage words live in src/lib/copy/home.txt (Kris edits them there).
+	const copy = parseCopy(homeCopy);
+	const t = (/** @type {string} */ k, fallback = '') => copy[k] || fallback;
 
 	// Structured data for the home page: the site, who makes it, and the game.
 	// The description reuses the page's meta description word for word, so the
@@ -192,15 +195,19 @@
 	<section class="hero" bind:this={heroSection}>
 		<div class="hero-text">
 			<h1 class="brand">Shikaku+</h1>
-			<p class="tagline">Complete squares with friends.</p>
-			<a class="play" href={PLAY_URL}>Play now</a>
+			<p class="tagline">{t('hero.tagline', 'Complete squares with friends.')}</p>
+			<div class="hero-buttons">
+				<a class="play" href={PLAY_URL}>{t('hero.play', 'Play now')}</a>
+				<a class="play play-vs" href={VS_URL}>{t('hero.vs', 'Play VS')}</a>
+			</div>
 
 			{#if boardsSolved}
 				<p class="solved-stat">
 					<span class="solved-num">{boardsSolved.toLocaleString()}+</span>
-					<span class="solved-label">puzzles solved by players worldwide</span>
+					<span class="solved-label">{t('hero.solved', 'puzzles solved by players worldwide')}</span>
 				</p>
 			{/if}
+			{#if t('hero.facts')}<p class="hero-facts">{t('hero.facts')}</p>{/if}
 		</div>
 
 		<div class="board-col">
@@ -259,33 +266,18 @@
 					onClose={() => (showSolved = false)}
 				/>
 			</div>
-			<p class="board-note">New puzzle every day, at 6:00 AM Philippine Time.</p>
+			<p class="board-note">{t('hero.board_note', 'New puzzle every day, at 6:00 AM Philippine Time.')}</p>
 		</div>
 	</section>
 
-	<Changelog />
-
-	<!-- About + Roadmap -->
-	<section class="two-col">
-		<div class="left-col">
-			<About />
-			<AboutHokan />
-			<!-- Was the donation bar, payment methods and Foundation countdown; payments
-			     moved to Polar on /support (Kris, 2026-11-26). The old components are
-			     still in src/lib, unused. -->
-			<a class="support-link" href="/support">
-				<span class="support-link-title">Support Shikaku+</span>
-				<span class="support-link-sub">Foundation and Supporter: edit your player tag, wear a badge.</span>
-			</a>
-		</div>
-		<div class="right-col">
-			<Roadmap />
-		</div>
-	</section>
+	<!-- Everything below the hero: Kris's bento design, words in src/lib/copy/home.txt. -->
+	<HomeBento />
 
 	<footer class="footer">
 		<nav class="legal-links">
 			<a href="/blog">Blog</a>
+			<span class="sep">·</span>
+			<a href="/about">About</a>
 			<span class="sep">·</span>
 			<a href="/support">Support</a>
 			<span class="sep">·</span>
@@ -387,6 +379,21 @@
 	}
 	.play:hover {
 		filter: brightness(1.06);
+	}
+	.hero-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.play-vs {
+		background: var(--chip-unsel-fill);
+		color: var(--text-primary);
+		padding: 14px 22px;
+	}
+	.hero-facts {
+		margin: 8px 0 0;
+		font-size: 13px;
+		color: var(--text-secondary);
 	}
 	.play:active {
 		transform: translateY(1px);
@@ -503,27 +510,6 @@
 		color: var(--text-secondary);
 		letter-spacing: -0.2px;
 	}
-	/* —— About + Roadmap —— */
-	.two-col {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 16px;
-		align-items: stretch;
-	}
-	.left-col {
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-	}
-	.right-col {
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-	}
-	/* Right column fills the row height; its two cards share it equally. */
-	.right-col > :global(*) {
-		flex: 1;
-	}
 	.footer {
 		padding-top: 64px;
 		font-size: 13px;
@@ -535,6 +521,7 @@
 	}
 	.legal-links {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 10px;
 		align-items: center;
 	}
@@ -571,44 +558,8 @@
 		.daily-label {
 			justify-content: center;
 		}
-		/* Single stacked column: flatten both cols so their cards can be
-		   reordered freely, then put Roadmap above the Support Us card. */
-		.two-col {
-			display: flex;
-			flex-direction: column;
+		.hero-buttons {
+			justify-content: center;
 		}
-		.left-col,
-		.right-col {
-			display: contents;
-		}
-		.two-col :global(.about)        { order: 1; }
-		.two-col :global(.about-hokan)  { order: 2; }
-		.two-col :global(.roadmap)      { order: 3; }
-		.two-col :global(.support-grid) { order: 4; }
-		.two-col :global(.rewards-card) { order: 5; }
-		.two-col :global(.deadline-card) { order: 6; }
-	}
-	.support-link {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		padding: 16px 20px;
-		border-radius: var(--radius);
-		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
-		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
-		text-decoration: none;
-	}
-	.support-link:hover {
-		border-color: color-mix(in srgb, var(--text-primary) 20%, transparent);
-	}
-	.support-link-title {
-		font-family: var(--font-ui);
-		font-size: 22px;
-		letter-spacing: -0.8px;
-		color: var(--text-primary);
-	}
-	.support-link-sub {
-		font-size: 15px;
-		color: var(--text-secondary);
 	}
 </style>

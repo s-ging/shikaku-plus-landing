@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { parseCopy, inline, blocks } from './parse.js';
+import { parseCopy, inline, blocks, pair, pairs, faqPairs } from './parse.js';
 import text from './support.txt?raw';
+import home from './home.txt?raw';
 
 describe('copy files', () => {
 	it('reads sections, skips notes, trims', () => {
@@ -22,5 +23,15 @@ describe('copy files', () => {
 	});
 	it('turns paragraphs and bullets into HTML', () => {
 		expect(blocks('One\ntwo\n\n- a\n- b')).toBe('<p>One<br/>two</p><ul><li>a</li><li>b</li></ul>');
+	});
+	it('home.txt: pairs, goals and questions read as expected', () => {
+		const c = parseCopy(home);
+		expect(pair(c['modes.zen'])).toEqual(['Zen', 'No clock']);
+		expect(pairs(c['foundation.goals'])[0]).toEqual(['$25', 'Google Play Store launch']);
+		const faq = faqPairs(c['faq']);
+		expect(faq.length).toBe(8);
+		expect(faq[0]).toEqual({ q: 'Is Shikaku+ free?', a: 'Yes. Free to play, with no ads.' });
+		for (const k of ['hero.tagline', 'changelog.left.points', 'help.body', 'vs.body', 'foundation.title', 'about.body'])
+			expect(c[k], k).toBeTruthy();
 	});
 });

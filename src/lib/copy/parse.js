@@ -49,3 +49,31 @@ export function blocks(/** @type {string} */ s) {
 		})
 		.join('');
 }
+
+/** "left | right" → [left, right] (right is '' when there is no "|"). */
+export function pair(/** @type {string} */ s) {
+	const i = s.indexOf('|');
+	return i < 0 ? [s.trim(), ''] : [s.slice(0, i).trim(), s.slice(i + 1).trim()];
+}
+
+/** Non-empty lines, each split as a pair: "amount | label" lists. */
+export function pairs(/** @type {string} */ s) {
+	return s
+		.split('\n')
+		.map((l) => l.trim())
+		.filter(Boolean)
+		.map(pair);
+}
+
+/** "Q: …" / "A: …" blocks → [{ q, a }]. An answer may run over several lines. */
+export function faqPairs(/** @type {string} */ s) {
+	/** @type {{ q: string, a: string }[]} */
+	const out = [];
+	for (const line of s.split('\n')) {
+		const t = line.trim();
+		if (/^q:/i.test(t)) out.push({ q: t.slice(2).trim(), a: '' });
+		else if (/^a:/i.test(t) && out.length) out[out.length - 1].a = t.slice(2).trim();
+		else if (t && out.length) out[out.length - 1].a += (out[out.length - 1].a ? ' ' : '') + t;
+	}
+	return out.filter((p) => p.q);
+}
