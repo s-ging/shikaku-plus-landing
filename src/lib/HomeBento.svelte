@@ -10,6 +10,12 @@
 	import tier2 from '$lib/assets/foundation-badges/f-tier-2.svg?raw';
 	import tier3 from '$lib/assets/foundation-badges/f-tier-3.svg?raw';
 	import tier4 from '$lib/assets/foundation-badges/f-tier-4.svg?raw';
+	// The app's own mode icons (assets/images/gamemode-icons in the app repo).
+	import zenIcon from '$lib/assets/mode-icons/zen.svg?raw';
+	import timeAttackIcon from '$lib/assets/mode-icons/time-attack.svg?raw';
+	import blitzIcon from '$lib/assets/mode-icons/blitz.svg?raw';
+	import tekazuIcon from '$lib/assets/mode-icons/tekazu.svg?raw';
+	import { jsonLd } from '$lib/jsonld.js';
 
 	/** @type {{ posts?: { title: string, slug: string, excerpt?: string | null, created_at: string, post_type?: string | null }[] }} */
 	let { posts = [] } = $props();
@@ -48,10 +54,10 @@
 	const vsVideo = t('vs.video');
 
 	const modes = [
-		{ key: 'modes.zen', cls: 'zen' },
-		{ key: 'modes.time_attack', cls: 'ta' },
-		{ key: 'modes.blitz', cls: 'blitz' },
-		{ key: 'modes.tekazu', cls: 'tekazu' }
+		{ key: 'modes.zen', cls: 'zen', icon: zenIcon },
+		{ key: 'modes.time_attack', cls: 'ta', icon: timeAttackIcon },
+		{ key: 'modes.blitz', cls: 'blitz', icon: blitzIcon },
+		{ key: 'modes.tekazu', cls: 'tekazu', icon: tekazuIcon }
 	]
 		.map((m) => ({ ...m, parts: pair(t(m.key)) }))
 		.filter((m) => m.parts[0]);
@@ -65,7 +71,31 @@
 	}));
 	const faq = faqPairs(t('faq'));
 	const faqHalf = Math.ceil(faq.length / 2);
+	/** Open questions, by index. Several can be open at once. */
+	let openFaq = $state(/** @type {Set<number>} */ (new Set()));
+	function toggleFaq(/** @type {number} */ i) {
+		const next = new Set(openFaq);
+		if (next.has(i)) next.delete(i);
+		else next.add(i);
+		openFaq = next;
+	}
+	// The questions as structured data, for search engines and AI answers.
+	const faqData = faq.length
+		? jsonLd({
+				'@context': 'https://schema.org',
+				'@type': 'FAQPage',
+				mainEntity: faq.map((p) => ({
+					'@type': 'Question',
+					name: p.q,
+					acceptedAnswer: { '@type': 'Answer', text: p.a.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') }
+				}))
+			})
+		: '';
 </script>
+
+<svelte:head>
+	{#if faqData}{@html faqData}{/if}
+</svelte:head>
 
 <div class="bento">
 	<!-- Changelog: the four newest blog posts; home.txt's words when there are none
@@ -117,7 +147,7 @@
 	</section>
 
 	<!-- Help Me! -->
-	<section id="help" class="card span-6">
+	<section id="help" class="card span-7">
 		<h2 class="h2">{t('help.title')}</h2>
 		<div class="body">{@html para('help.body')}</div>
 		{#if helpVideo}
@@ -130,11 +160,12 @@
 	</section>
 
 	<!-- Modes -->
-	<section id="modes" class="card span-6">
+	<section id="modes" class="card span-5">
 		<h2 class="h2">{t('modes.title', 'Modes')}</h2>
 		<div class="modes">
 			{#each modes as m (m.key)}
 				<a class="mode {m.cls}" href={PLAY_URL}>
+					<span class="mode-icon" aria-hidden="true">{@html m.icon}</span>
 					<span class="mode-name">{m.parts[0]}</span>
 					<span class="mode-sub">{m.parts[1]}</span>
 				</a>
@@ -254,14 +285,22 @@
 	{#if faq.length}
 		<section id="faq" class="card span-12">
 			<h2 class="h2 faq-title">{t('faq.title', 'Questions')}</h2>
-			<div class="split-2 faq-cols">
+			<div class="faq-cols">
 				{#each [faq.slice(0, faqHalf), faq.slice(faqHalf)] as half, h (h)}
-					<div>
-						{#each half as item (item.q)}
-							<details>
-								<summary>{item.q}</summary>
-								<p class="muted">{@html inline(item.a)}</p>
-							</details>
+					<div class="faq-col">
+						{#each half as item, j (item.q)}
+							{@const i = h * faqHalf + j}
+							<div class="faq-item" class:open={openFaq.has(i)}>
+								<h3 class="faq-q">
+									<button type="button" aria-expanded={openFaq.has(i)} aria-controls="faq-a-{i}" onclick={() => toggleFaq(i)}>
+										<span>{item.q}</span>
+										<svg class="faq-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="square" fill="none" /></svg>
+									</button>
+								</h3>
+								<div class="faq-a" id="faq-a-{i}" role="region" inert={!openFaq.has(i)}>
+									<div class="faq-a-inner"><p>{@html inline(item.a)}</p></div>
+								</div>
+							</div>
 						{/each}
 					</div>
 				{/each}
@@ -278,7 +317,9 @@
 		align-items: stretch;
 		margin-top: 12px;
 	}
+	.span-5 { grid-column: span 5; }
 	.span-6 { grid-column: span 6; }
+	.span-7 { grid-column: span 7; }
 	.span-12 { grid-column: span 12; }
 	.card {
 		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
@@ -350,25 +391,55 @@
 	.example { background: var(--bg); border-radius: var(--radius); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
 	.bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; gap: 2px; }
 	.dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-	.modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+	/* Mode cards: the app's CustomGameButton (lib/custom_game_button.dart): square,
+	   page-coloured with the mode's stroke as border, the icon as a 30% watermark
+	   bleeding off the right; hover or focus fills it like a selected card. */
+	.modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 	.mode {
-		border-radius: var(--radius);
-		padding: 10px;
-		min-height: 68px;
+		--fill: #d0b878;
+		--stroke: #655733;
+		position: relative;
+		aspect-ratio: 1 / 1;
+		overflow: hidden;
 		box-sizing: border-box;
-		text-decoration: none;
+		padding: 12px;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
 		gap: 6px;
-		color: #1b1b1b;
+		background: var(--bg);
+		border: 2.5px solid var(--stroke);
+		border-radius: var(--radius);
+		color: var(--text-primary);
+		text-decoration: none;
+		transition: background 160ms ease-out;
 	}
-	.mode-name { font-size: 14px; font-weight: 700; }
-	.mode-sub { font-size: 12px; }
-	.zen { background: #d0b878; border: 2px solid #655733; }
-	.ta { background: #d08080; border: 2px solid #773535; }
-	.blitz { background: #8098b0; border: 2px solid #364a5f; }
-	.tekazu { background: #88b098; border: 2px solid #2a6341; }
+	.mode-icon {
+		position: absolute;
+		right: -14%;
+		top: 20%;
+		width: 102%;
+		color: var(--stroke);
+		opacity: 0.3;
+		pointer-events: none;
+	}
+	.mode-icon :global(svg) { display: block; width: 100%; height: auto; }
+	.mode-icon :global(path) { fill: currentColor; }
+	.mode-name { position: relative; font-family: var(--font-ui); font-size: 20px; letter-spacing: -0.5px; line-height: 1.1; }
+	.mode-sub { position: relative; font-size: 12px; line-height: 1.35; color: var(--fill); }
+	.mode:hover, .mode:focus-visible { background: var(--fill); }
+	.mode:hover .mode-name, .mode:focus-visible .mode-name { color: #1b1b1b; }
+	.mode:hover .mode-sub, .mode:focus-visible .mode-sub { color: var(--stroke); }
+	.ta { --fill: #d08080; --stroke: #773535; }
+	.blitz { --fill: #8098b0; --stroke: #364a5f; }
+	.tekazu { --fill: #88b098; --stroke: #2a6341; }
+	@media (prefers-color-scheme: light) {
+		.mode { border-color: var(--fill); }
+		.mode-sub { color: var(--stroke); }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.mode, .faq-a, .faq-icon { transition: none !important; }
+	}
 	.vs-card { border-color: rgba(160, 144, 192, 0.45); padding: 20px; gap: 20px; }
 	.vs-left { grid-column: span 5; gap: 14px; }
 	.vs-mark { margin: 0; }
@@ -437,13 +508,40 @@
 	.tier-icon :global(svg) { width: 100%; height: 100%; shape-rendering: crispEdges; }
 	.tier-text { display: flex; flex-direction: column; }
 	.tier-name { font-size: 14px; font-weight: 700; }
-	.faq-title { margin-bottom: 4px; }
-	.faq-cols { column-gap: 32px; row-gap: 0; }
-	details { border-top: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent); padding: 12px 0; }
-	details:last-child { border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent); }
-	summary { cursor: pointer; list-style: none; font-size: 16px; min-height: 24px; }
-	summary::-webkit-details-marker { display: none; }
-	details p { margin: 8px 0 0; font-size: 14px; line-height: 1.55; }
+	.faq-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; align-items: start; }
+	.faq-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+	.faq-item {
+		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
+		border-radius: var(--radius);
+		transition: border-color 160ms ease-out;
+	}
+	.faq-item:hover, .faq-item.open { border-color: color-mix(in srgb, var(--button-fill) 45%, transparent); }
+	.faq-q { margin: 0; font-size: inherit; font-weight: normal; }
+	.faq-q button {
+		width: 100%;
+		min-height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 12px 16px;
+		background: none;
+		border: none;
+		color: var(--text-primary);
+		font-family: var(--font-ui);
+		font-size: 15px;
+		letter-spacing: -0.2px;
+		text-align: left;
+		cursor: pointer;
+	}
+	.faq-q button:focus-visible { outline: 2px solid var(--text-primary); outline-offset: -2px; border-radius: var(--radius); }
+	.faq-icon { flex-shrink: 0; color: var(--button-fill); transition: transform 220ms ease-out; }
+	.open .faq-icon { transform: rotate(45deg); }
+	.faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 220ms ease-out; }
+	.open .faq-a { grid-template-rows: 1fr; }
+	.faq-a-inner { overflow: hidden; }
+	.faq-a p { margin: 0; padding: 0 16px 14px; font-size: 14px; line-height: 1.6; color: var(--text-secondary); }
 	@media (max-width: 880px) {
 		.bento > *,
 		.split-12 > *,
@@ -452,8 +550,7 @@
 		}
 		.split-2 { grid-template-columns: minmax(0, 1fr); }
 		.foundation, .split-12 { grid-template-columns: minmax(0, 1fr); }
-		.faq-cols { row-gap: 0; }
+		.faq-cols { grid-template-columns: minmax(0, 1fr); }
 		.get { flex-direction: column; align-items: flex-start; }
-		.faq-cols > div:first-child details:last-child { border-bottom: none; }
 	}
 </style>
