@@ -74,25 +74,35 @@ Shipped
 [roadmap.1.title]
 Shikaku+ VS public beta
 [roadmap.1.body]
-On the web at vs.shikaku.plus.
+Playable in-game against bots or friends! Global matchmaking in beta.
 
 [roadmap.2.status]
 building
 [roadmap.2.label]
 Building now
 [roadmap.2.title]
-VS in the app
+VS Edition 27, Volume 1
 [roadmap.2.body]
-The next app update brings VS and online play to Android.
+The next update brings badges, the VS Ranked systems, and a full replay system!
 
 [roadmap.3.status]
 planned
 [roadmap.3.label]
 Planned
 [roadmap.3.title]
-Ranked · Vol. 1 · 2027
+Shikaku+ VERSUS and ASCENT
 [roadmap.3.body]
-The first ranked VS season.
+Open qualifier cups for everyone for gold and glory.
+
+[roadmap.4.status]
+planned
+[roadmap.4.label]
+Planned
+[roadmap.4.title]
+Shikaku+ on iOS, Steam, and Console
+[roadmap.4.body]
+FULL crossplay and cross progression in the near future.
+
 
 # ─── Help Me! ────────────────────────────────────────────────────────────────
 
@@ -126,13 +136,16 @@ Try a 16×16 Brutal
 Modes
 
 [modes.zen]
-Zen | No clock
+Zen | Clear at your pace, no pressure
 
 [modes.time_attack]
-Time Attack | 10 games to unlock
+Time Attack | Finish as many boards against the clock
 
 [modes.blitz]
-Blitz | 50 games to unlock
+Blitz | Finish the board as fast as you can
+
+[modes.tekazu]
+Tekazu | Clean clear 5 boards with limited lives
 
 [modes.note]
 Every mode plays Classic or Hokan, 6×6 to 16×16, Easy to Brutal.
@@ -143,7 +156,7 @@ Every mode plays Classic or Hokan, 6×6 to 16×16, Easy to Brutal.
 NEW · Public beta
 
 [vs.body]
-Then race them. You and your opponent solve side by side. Clear a board and it sends Mines to theirs. They freeze yours back with ice.
+Play against a bot or a friend (or foe) with Shikaku+ VS. A new competitive take on a pen and paper puzzle.
 
 [vs.standard]
 Standard | 3 Stock a round.
@@ -264,7 +277,7 @@ There’s some given blocks across the board, but now we’ve taken the numbers 
 From analysis to deduction. It’s pretty clean, you should try it!
 
 [get.title]
-9MB. Plays offline. Works on old phones.
+Play Shikaku+ now!
 
 [get.android]
 Get it on Google Play
@@ -280,25 +293,25 @@ Questions
 
 [faq]
 Q: Is Shikaku+ free?
-A: Yes. Free to play, with no ads.
+A: Yes. Shikaku+ is forever free to play, with zero ads.
 
 Q: Can I play with friends?
-A: Yes. Send a Help Me! link to finish a board together, or race each other in Shikaku+ VS.
+A: Yes! Send a Help Me! link to finish a board together, or against each other in Shikaku+ VS.
 
 Q: Does it work offline?
-A: Yes. The Android app plays without a connection.
+A: Yes. The Android app plays without an internet connection.
 
-Q: How big is it?
-A: About 9.7MB to download from Google Play. In the browser there is nothing to install.
+Q: Is Shikaku+ a big download?
+A: Roughly 10MB to download from Google Play. Playing on the browser is even lighter at 0MB.
 
-Q: Do I need an account?
-A: No, you can play as a guest. An account keeps your badges, stats and player tag.
+Q: Do I need an account to play Shikaku+?
+A: No, guests are welcome to play. Creating an account keeps your badges, stats and player tag.
 
-Q: Is there an iPhone app?
-A: Not yet. On an iPhone, play in the browser at play.shikaku.plus.
+Q: Is there an iPhone or iPad app?
+A: Not yet. On an iPhone, play in the browser at play.shikaku.plus. Feel free to support us to get an iOS version soon!
 
 Q: What is Shikaku?
-A: A Japanese logic puzzle by Nikoli. Shikaku (四角) means square. You split the grid into rectangles, each holding exactly one number equal to its area.
+A: Shikaku is a Japanese logic puzzle by Nikoli. Shikaku (四角) means square. You split the grid into rectangles, each holding exactly one number equal to its area.
 
 Q: What is Hokan?
-A: Hokan (補完) means completion. Part of the board comes filled in, and you fit a tray of box sizes into the gaps.
+A: Hokan (補完) means completion. Hokan is a totally new gamemode from the Shikaku puzzle. Part of the board comes filled in, and you fit a tray of box sizes into the gaps.
