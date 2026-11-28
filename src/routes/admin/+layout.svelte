@@ -20,6 +20,7 @@
 			<a class="wordmark" href="/admin">Shikaku+ <span>Admin</span></a>
 			<nav class="nav">
 				<a href="/admin" class:active={page.url.pathname === '/admin'}>Posts</a>
+				<a href="/admin/players" class:active={page.url.pathname.startsWith('/admin/players')}>Players</a>
 			</nav>
 			<div class="right">
 				<a class="view" href="/blog" target="_blank" rel="noopener noreferrer">View blog ↗</a>
