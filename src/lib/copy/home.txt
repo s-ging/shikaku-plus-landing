@@ -5,6 +5,8 @@
 # - A blank line starts a new paragraph.
 # - A line starting with "- " is a bullet point.
 # - Links: [text](https://...) or [text](/about)
+# - Coloured words: {violet|VERSUS} or {ascent|ASCENT} (also gold, green, red,
+#   blue, or a hex colour like {#C5956B|ASCENT})
 # - Text in [square brackets] with no link is a placeholder still to fill in.
 #   Give a placeholder a space ([amount raised], not [raised]): a lone word in
 #   brackets on its own line reads as a new section name.
@@ -90,7 +92,7 @@ planned
 [roadmap.3.label]
 Planned
 [roadmap.3.title]
-Shikaku+ VERSUS and ASCENT
+Shikaku+ {violet|VERSUS} and {ascent|ASCENT}
 [roadmap.3.body]
 Open qualifier cups for everyone for gold and glory.
 
@@ -170,6 +172,7 @@ Play VS
 Learn how VS works
 
 [vs.video]
+/media/vs-match
 # The VS clip (from the trailer at 1:00): a path without extension, e.g.
 # /media/vs-match (vs-match.webm, .mp4 and .jpg in static/media/).
 

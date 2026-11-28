@@ -12,6 +12,8 @@
 	import { page } from '$app/state';
 	import { jsonLd, PLAY_STORE_URL } from '$lib/jsonld.js';
 
+	let { data } = $props();
+
 	const PLAY_URL = 'https://play.shikaku.plus'; // → full Flutter web app
 	const VS_URL = 'https://vs.shikaku.plus';
 	// Homepage words live in src/lib/copy/home.txt (Kris edits them there).
@@ -271,7 +273,7 @@
 	</section>
 
 	<!-- Everything below the hero: Kris's bento design, words in src/lib/copy/home.txt. -->
-	<HomeBento />
+	<HomeBento posts={data?.posts ?? []} />
 
 	<footer class="footer">
 		<nav class="legal-links">

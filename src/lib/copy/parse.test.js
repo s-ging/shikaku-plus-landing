@@ -21,6 +21,11 @@ describe('copy files', () => {
 			'<a href="/x">t</a> <a href="mailto:a@b.c">m</a> [e](javascript:alert(1)) &lt;b&gt;'
 		);
 	});
+	it('colours {name|word} and {#hex|word}, leaves unknown names alone', () => {
+		expect(inline('{violet|VERSUS} {#C5956B|ASCENT} {nope|x}')).toBe(
+			'<span style="color:#a090c0">VERSUS</span> <span style="color:#C5956B">ASCENT</span> {nope|x}'
+		);
+	});
 	it('turns paragraphs and bullets into HTML', () => {
 		expect(blocks('One\ntwo\n\n- a\n- b')).toBe('<p>One<br/>two</p><ul><li>a</li><li>b</li></ul>');
 	});

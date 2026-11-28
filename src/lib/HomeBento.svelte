@@ -11,7 +11,17 @@
 	import tier3 from '$lib/assets/foundation-badges/f-tier-3.svg?raw';
 	import tier4 from '$lib/assets/foundation-badges/f-tier-4.svg?raw';
 
+	/** @type {{ posts?: { title: string, slug: string, excerpt?: string | null, created_at: string, post_type?: string | null }[] }} */
+	let { posts = [] } = $props();
+
 	const PLAY_URL = 'https://play.shikaku.plus';
+	const TYPE_LABEL = /** @type {Record<string, string>} */ ({
+		announcement: 'Announcement',
+		patch_notes: 'Patch notes',
+		blog: 'Blog'
+	});
+	const dateOf = (/** @type {string} */ iso) =>
+		new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Asia/Manila' });
 	const VS_URL = 'https://vs.shikaku.plus';
 	const TRAILER_URL = 'https://www.youtube.com/watch?v=hgGbH0npVNM';
 
@@ -58,40 +68,56 @@
 </script>
 
 <div class="bento">
-	<!-- Changelog -->
-	<section class="card span-8">
+	<!-- Changelog: the four newest blog posts; home.txt's words when there are none
+	     (preview builds have no Supabase). -->
+	<section class="card span-6">
 		<div class="row">
 			<h2 class="h2">{t('changelog.title', 'Changelog')}</h2>
 			{#if t('changelog.badge')}<span class="pill pill-gold">{t('changelog.badge')}</span>{/if}
-			<span class="muted small push">{t('changelog.date')}</span>
+			{#if !posts.length}<span class="muted small push">{t('changelog.date')}</span>{/if}
 		</div>
-		<div class="split-2">
-			<div class="col">
-				<h3 class="h3 violet">{t('changelog.left.title')}</h3>
-				<div class="body">{@html para('changelog.left.points')}</div>
+		{#if posts.length}
+			<div class="posts">
+				{#each posts as post (post.slug)}
+					<a class="post" href="/blog/{post.slug}">
+						<span class="post-meta">
+							<span class="post-type {post.post_type ?? 'blog'}">{TYPE_LABEL[post.post_type ?? 'blog'] ?? 'Blog'}</span>
+							<span class="muted xsmall">{dateOf(post.created_at)}</span>
+						</span>
+						<span class="post-title">{post.title}</span>
+						{#if post.excerpt}<span class="post-excerpt">{post.excerpt}</span>{/if}
+					</a>
+				{/each}
 			</div>
-			<div class="col">
-				<h3 class="h3 gold">{t('changelog.right.title')}</h3>
-				<div class="body">{@html para('changelog.right.points')}</div>
+		{:else}
+			<div class="split-2">
+				<div class="col">
+					<h3 class="h3 violet">{t('changelog.left.title')}</h3>
+					<div class="body">{@html para('changelog.left.points')}</div>
+				</div>
+				<div class="col">
+					<h3 class="h3 gold">{t('changelog.right.title')}</h3>
+					<div class="body">{@html para('changelog.right.points')}</div>
+				</div>
 			</div>
-		</div>
+		{/if}
 		{#if t('changelog.more')}<p class="more">{@html line('changelog.more')}</p>{/if}
 	</section>
 
 	<!-- Where it's at -->
-	<section class="card span-4">
+	<section class="card span-6">
 		<h2 class="h2">{t('roadmap.title', 'Where it’s at')}</h2>
 		{#each roadmap as r (r.title)}
 			<div class="stack-3">
 				<span><span class="pill pill-{r.status}">{r.label}</span></span>
-				<span class="item-title">{r.title}</span>
-				<span class="muted">{r.body}</span>
+				<span class="item-title">{@html inline(r.title)}</span>
+				<span class="muted">{@html inline(r.body)}</span>
 			</div>
 		{/each}
 	</section>
 
 	<!-- Help Me! -->
-	<section id="help" class="card span-7">
+	<section id="help" class="card span-6">
 		<h2 class="h2">{t('help.title')}</h2>
 		<div class="body">{@html para('help.body')}</div>
 		{#if helpVideo}
@@ -104,7 +130,7 @@
 	</section>
 
 	<!-- Modes -->
-	<section id="modes" class="card span-5">
+	<section id="modes" class="card span-6">
 		<h2 class="h2">{t('modes.title', 'Modes')}</h2>
 		<div class="modes">
 			{#each modes as m (m.key)}
@@ -200,20 +226,20 @@
 	</section>
 
 	<!-- About -->
-	<section class="card span-4">
+	<section class="card span-6">
 		<h2 class="h2">{t('about.title', 'About Shikaku+')}</h2>
 		<div class="body">{@html para('about.body')}</div>
 		{#if t('about.more')}<p class="more">{@html line('about.more')}</p>{/if}
 	</section>
 
 	<!-- About Hokan -->
-	<section class="card span-4">
+	<section class="card span-6">
 		<h2 class="h2 hokan">{t('hokan.title', 'About Shikaku Hokan')}</h2>
 		<div class="body">{@html para('hokan.body')}</div>
 	</section>
 
 	<!-- Get it -->
-	<section id="get" class="card span-4">
+	<section id="get" class="card span-12 get">
 		<h2 class="h2 tight">{t('get.title')}</h2>
 		<!-- Google's official badge, unaltered (brand rules), beside a button of the same size. -->
 		<div class="get-row">
@@ -252,10 +278,7 @@
 		align-items: stretch;
 		margin-top: 12px;
 	}
-	.span-4 { grid-column: span 4; }
-	.span-5 { grid-column: span 5; }
-	.span-7 { grid-column: span 7; }
-	.span-8 { grid-column: span 8; }
+	.span-6 { grid-column: span 6; }
 	.span-12 { grid-column: span 12; }
 	.card {
 		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
@@ -331,7 +354,7 @@
 	.mode {
 		border-radius: var(--radius);
 		padding: 10px;
-		min-height: 88px;
+		min-height: 68px;
 		box-sizing: border-box;
 		text-decoration: none;
 		display: flex;
@@ -340,7 +363,7 @@
 		gap: 6px;
 		color: #1b1b1b;
 	}
-	.mode-name { font-size: 15px; font-weight: 700; }
+	.mode-name { font-size: 14px; font-weight: 700; }
 	.mode-sub { font-size: 12px; }
 	.zen { background: #d0b878; border: 2px solid #655733; }
 	.ta { background: #d08080; border: 2px solid #773535; }
@@ -361,7 +384,30 @@
 	.clip-placeholder { aspect-ratio: 16 / 9; flex: none; border: 2px dashed color-mix(in srgb, var(--text-primary) 20%, transparent); }
 	.trailer-link { font-size: 14px; color: #a090c0; text-decoration: none; align-self: flex-start; }
 	.trailer-link:hover { text-decoration: underline; }
+	.get { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding: 20px; }
+	.get .h2 { font-size: 24px; }
 	.get-row { display: flex; flex-wrap: nowrap; gap: 10px; align-items: center; }
+	.posts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+	.post {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding: 12px 14px;
+		border-radius: var(--radius);
+		background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+		border: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
+		text-decoration: none;
+		color: var(--text-primary);
+		min-width: 0;
+	}
+	.post:hover { border-color: color-mix(in srgb, var(--button-fill) 50%, transparent); }
+	.post:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; }
+	.post-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+	.post-type { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; }
+	.post-type.announcement { color: var(--button-fill); }
+	.post-type.patch_notes { color: #a090c0; }
+	.post-title { font-size: 15px; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+	.post-excerpt { font-size: 13px; line-height: 1.5; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 	.store-badge, .btn-outline { flex: 0 0 auto; width: 150px; height: 45px; box-sizing: border-box; }
 	.store-badge img { display: block; width: 150px; height: 45px; }
 	.btn-outline {
@@ -407,6 +453,7 @@
 		.split-2 { grid-template-columns: minmax(0, 1fr); }
 		.foundation, .split-12 { grid-template-columns: minmax(0, 1fr); }
 		.faq-cols { row-gap: 0; }
+		.get { flex-direction: column; align-items: flex-start; }
 		.faq-cols > div:first-child details:last-child { border-bottom: none; }
 	}
 </style>

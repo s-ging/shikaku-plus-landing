@@ -28,12 +28,30 @@ export function parseCopy(text) {
 const escapeHtml = (/** @type {string} */ s) =>
 	s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-/** Escapes, then turns [text](url) into links. Only https, relative and mailto. */
+/** Named colours for {name|text}; a 6-digit hex like {#C5956B|text} also works. */
+const COLORS = {
+	violet: '#a090c0',
+	ascent: '#c5956b',
+	gold: '#d0b878',
+	green: '#88b098',
+	red: '#d08080',
+	blue: '#8098b0'
+};
+
+/**
+ * Escapes, then turns [text](url) into links (https, relative and mailto only)
+ * and {violet|WORD} into coloured words.
+ */
 export function inline(/** @type {string} */ s) {
-	return escapeHtml(s).replace(
-		/\[([^\]]+)\]\(((?:https:\/\/|\/|mailto:)[^)\s]*)\)/g,
-		(_, t, u) => `<a href="${u}">${t}</a>`
-	);
+	return escapeHtml(s)
+		.replace(
+			/\[([^\]]+)\]\(((?:https:\/\/|\/|mailto:)[^)\s]*)\)/g,
+			(_, t, u) => `<a href="${u}">${t}</a>`
+		)
+		.replace(/\{(#[0-9a-fA-F]{6}|[a-z]+)\|([^{}|]+)\}/g, (all, c, t) => {
+			const color = c.startsWith('#') ? c : COLORS[/** @type {keyof typeof COLORS} */ (c)];
+			return color ? `<span style="color:${color}">${t}</span>` : all;
+		});
 }
 
 /** Paragraphs as HTML: blank lines split; "- " lines become a list. */
