@@ -72,7 +72,7 @@
 			<li>
 				On the web, purchases are sold by <strong>Polar</strong> (polar.sh), our reseller and merchant
 				of record, under <a href="https://polar.sh/legal/checkout-buyer-terms">Polar's buyer terms</a
-				>. On Android, purchases go through Google Play.
+				>. If purchases become available inside the Android app, they go through Google Play.
 			</li>
 			<li>
 				Purchases are final and non-refundable, except where the law or the seller's terms (Polar or

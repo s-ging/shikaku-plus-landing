@@ -62,7 +62,7 @@
 			We do not intentionally collect credit card numbers, debit card numbers, or bank account
 			details. Web purchases are processed by Polar (polar.sh), our merchant of record, which shares
 			with us the order, the email address and name you gave at checkout, and anything you typed into
-			its checkout fields (such as your player tag). Android purchases are processed by Google Play.
+			its checkout fields (such as your player tag). Purchases inside the Android app, when available, are processed by Google Play.
 		</p>
 
 		<h2>How we use your information</h2>
@@ -95,7 +95,7 @@
 			<li>Database and storage services.</li>
 			<li>Email delivery.</li>
 			<li>Website hosting.</li>
-			<li>Payment processing (Polar for web purchases, Google Play on Android).</li>
+			<li>Payment processing (Polar for web purchases; Google Play for purchases inside the Android app, when available).</li>
 		</ul>
 		<p>
 			These providers may process information on our behalf under their own privacy terms.

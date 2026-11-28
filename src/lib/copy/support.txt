@@ -40,7 +40,7 @@ How it reaches your account
 [how.points]
 - Pay with the email of your Shikaku+ account, or type your player tag in the checkout. You need an account: guests can't hold perks.
 - It usually takes under a minute. You get an email when it's on your account; open or restart the game to see it.
-- On Android, buy in the app through Google Play instead.
+- Playing on Android? Buy here on the web with your account's email; the perk shows up in the app too.
 - Payments are handled by Polar, our reseller and merchant of record. Purchases are final, except where the law or [Polar's buyer terms](https://polar.sh/legal/checkout-buyer-terms) require a refund. See our [Terms of Service](/terms-of-service).
 - Something wrong? Email [hello@shikaku.plus](mailto:hello@shikaku.plus).
 
