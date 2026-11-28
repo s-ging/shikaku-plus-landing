@@ -452,6 +452,7 @@
 	.vs-right { grid-column: span 7; align-self: center; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 	.clip { display: block; width: 100%; height: auto; border-radius: var(--radius); background: #000; }
 	.vs-right .clip { border: 2px solid #5b4e76; box-sizing: border-box; aspect-ratio: 16 / 9; object-fit: cover; }
+	#help .clip { aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent); box-sizing: border-box; }
 	.clip-placeholder { aspect-ratio: 16 / 9; flex: none; border: 2px dashed color-mix(in srgb, var(--text-primary) 20%, transparent); }
 	.trailer-link { font-size: 14px; color: #a090c0; text-decoration: none; align-self: flex-start; }
 	.trailer-link:hover { text-decoration: underline; }

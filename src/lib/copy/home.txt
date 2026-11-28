@@ -115,6 +115,7 @@ Stuck? Send it to a friend.
 On a 16×16 Brutal, you will get stuck. Help Me! turns your half-done board into a link. Your friend picks it up with Let Me Help!, places what they can, and passes it on. Every name it goes through stays with the board.
 
 [help.video]
+/media/help-me
 # The Help Me! clip: a path without extension, e.g. /media/help-me
 # (put help-me.webm, help-me.mp4 and help-me.jpg in static/media/). Empty = a
 # placeholder box.
