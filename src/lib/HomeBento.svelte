@@ -28,7 +28,6 @@
 	});
 	const dateOf = (/** @type {string} */ iso) =>
 		new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Asia/Manila' });
-	const VS_URL = 'https://vs.shikaku.plus';
 	const TRAILER_URL = 'https://www.youtube.com/watch?v=hgGbH0npVNM';
 
 	const c = parseCopy(copyText);
@@ -194,8 +193,9 @@
 				</div>
 				{#if t('vs.plates')}<div class="placeholder violet-dash"><span class="muted">{t('vs.plates')}</span></div>{/if}
 				<div class="row wrap">
-					<a class="btn btn-violet" href={VS_URL}>{t('vs.play', 'Play VS')}</a>
-					<a class="btn btn-dark" href="{VS_URL}/learn">{t('vs.learn', 'Learn how VS works')}</a>
+					<!-- Play VS opens the main app; Learn goes to the how-to-play post (Kris, 2026-11-28). -->
+					<a class="btn btn-violet" href={PLAY_URL}>{t('vs.play', 'Play VS')}</a>
+					<a class="btn btn-dark" href="/blog/how-to-play-shikaku-plus-versus">{t('vs.learn', 'Learn how VS works')}</a>
 				</div>
 			</div>
 			<div class="vs-right">
