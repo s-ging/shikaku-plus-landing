@@ -28,7 +28,7 @@ Play VS
 puzzles solved by players worldwide
 
 [hero.facts]
-Free · No ads · Browser and Android · 9MB
+Free forever · No ads · Browser and Android · ~10MB
 
 [hero.board_note]
 New puzzle every day, at 6:00 AM Philippine Time.
@@ -261,7 +261,7 @@ About Shikaku Hokan
 [hokan.body]
 I thought, Shikaku was hard enough. How can we make it harder?
 
-There’s some given blocks across the board, but now we’ve taken the numbers and it’s your game to make these numbers fit in the board now.
+There are some given blocks across the board, but now we’ve taken the numbers and it’s your game to make these numbers fit in the board now.
 
 From analysis to deduction. It’s pretty clean, you should try it!
 
@@ -291,7 +291,7 @@ Q: Does it work offline?
 A: Yes. The Android app plays without an internet connection.
 
 Q: Is Shikaku+ a big download?
-A: Roughly 10MB to download from Google Play. Playing on the browser is even lighter at 0MB.
+A: Roughly 10MB to download from Google Play. Playing on the browser is even lighter, no download needed.
 
 Q: Do I need an account to play Shikaku+?
 A: No, guests are welcome to play. Creating an account keeps your badges, stats and player tag.
