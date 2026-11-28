@@ -96,6 +96,18 @@ export const TEMPLATES = [
 		label: 'Beta tester',
 		title: 'Thanks for testing',
 		body: 'Hi {name}, thanks for playing the early builds. Here is the {badge} badge.'
+	},
+	{
+		key: 'hidden',
+		label: 'Hidden from leaderboards',
+		title: 'About the leaderboards',
+		body: 'Hi {name}, your account is hidden from the leaderboards for now. You can still play everything as usual.'
+	},
+	{
+		key: 'voucher',
+		label: 'Name change voucher',
+		title: 'A free name change',
+		body: 'Hi {name}, you can change your name once more right away, no waiting. Tap your name on your profile to change it.'
 	}
 ];
 

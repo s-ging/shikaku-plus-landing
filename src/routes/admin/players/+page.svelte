@@ -16,7 +16,7 @@
 	// Only used once data.supabase is known to be set (see the markup).
 	const db = $derived(/** @type {import('@supabase/supabase-js').SupabaseClient} */ (data.supabase));
 
-	/** @typedef {{ user_id: string, display_name: string, player_tag: string | null, active_badge_id: string | null, badges: string[], created_at: string, time_played_ms: number, games_finished: number, boards_finished: number, foundation_tier: number, supporter_until: string | null, name_flagged: boolean, country_code: string | null }} Player */
+	/** @typedef {{ user_id: string, display_name: string, player_tag: string | null, active_badge_id: string | null, badges: string[], created_at: string, time_played_ms: number, games_finished: number, boards_finished: number, foundation_tier: number, supporter_until: string | null, name_flagged: boolean, country_code: string | null, admin_hidden?: boolean, hide_from_leaderboards?: boolean, name_voucher?: boolean, name_changed_at?: string | null }} Player */
 	/** @typedef {{ id: number, at: string, action: string, target_id: string | null, target_name: string | null, detail: any, reason: string }} Activity */
 
 	let tab = $state('players');
@@ -33,7 +33,7 @@
 	let selectedId = $state(null);
 
 	// The change being prepared in the side panel.
-	/** @typedef {{ kind: 'badge' | 'tier', badge?: string, tier?: number, revoke: boolean }} Pending */
+	/** @typedef {{ kind: 'badge' | 'tier' | 'hide' | 'unhide' | 'voucher' | 'message', badge?: string, tier?: number, revoke: boolean }} Pending */
 	let pending = $state(/** @type {Pending | null} */ (null));
 	let reason = $state('');
 	/** @type {'template' | 'custom' | 'none'} */
@@ -122,6 +122,19 @@
 		templateKey = 'foundation';
 	}
 
+	// Account actions: hide from leaderboards, name change voucher, a message.
+	function startAccount(/** @type {'hide' | 'unhide' | 'voucher' | 'message'} */ kind) {
+		if (!selected) return;
+		if (pending?.kind === kind) return resetPending();
+		resetPending();
+		pending = { kind, revoke: kind === 'hide' };
+		msgMode = kind === 'hide' || kind === 'unhide' ? 'none' : kind === 'message' ? 'custom' : 'template';
+		templateKey = kind === 'hide' ? 'hidden' : kind === 'voucher' ? 'voucher' : 'bug';
+	}
+
+	const VERB = { badge: ['Grant', 'Revoke'], tier: ['Grant', 'Change'], hide: ['Hide', 'Hide'], unhide: ['Unhide', 'Unhide'], voucher: ['Give', 'Give'], message: ['Send', 'Send'] };
+	const verb = $derived(pending ? VERB[pending.kind][pending.revoke ? 1 : 0] : '');
+
 	const pendingBadge = $derived(
 		!pending ? '' : pending.kind === 'badge' ? pending.badge ?? '' : pending.tier ? `foundation_${pending.tier}` : ''
 	);
@@ -129,6 +142,10 @@
 	const title = $derived.by(() => {
 		if (!pending || !selected) return '';
 		const who = selected.display_name;
+		if (pending.kind === 'hide') return `Hide ${who} from the leaderboards`;
+		if (pending.kind === 'unhide') return `Show ${who} on the leaderboards again`;
+		if (pending.kind === 'voucher') return `Give ${who} a name change voucher`;
+		if (pending.kind === 'message') return `Send ${who} a message`;
 		if (pending.kind === 'tier') {
 			if (pending.tier === 0) return `Remove Foundation from ${who}`;
 			return `${pending.revoke ? 'Lower' : 'Set'} Foundation to ${'★'.repeat(pending.tier ?? 0)} for ${who}`;
@@ -138,7 +155,7 @@
 	});
 
 	const message = $derived.by(() => {
-		if (msgMode === 'none' || !selected) return null;
+		if ((msgMode === 'none' && pending?.kind !== 'message') || !selected) return null;
 		if (msgMode === 'custom') return { title: customTitle, body: customBody };
 		const t = TEMPLATES.find((x) => x.key === templateKey) ?? TEMPLATES[0];
 		const vars = { name: selected.display_name, badge: badgeName(pendingBadge) };
@@ -169,7 +186,13 @@
 		const msg = message ? { p_msg_title: message.title, p_msg_body: message.body } : {};
 		const base = { p_user_id: selected.user_id, p_reason: reason.trim(), ...msg };
 		const { error } =
-			pending.kind === 'tier'
+			pending.kind === 'message'
+				? await db.rpc('admin_send_message', { p_user_id: selected.user_id, p_title: message?.title ?? '', p_body: message?.body ?? '', p_reason: reason.trim() })
+				: pending.kind === 'hide' || pending.kind === 'unhide'
+				? await db.rpc('admin_set_hidden', { ...base, p_hidden: pending.kind === 'hide' })
+				: pending.kind === 'voucher'
+				? await db.rpc('admin_give_name_voucher', base)
+				: pending.kind === 'tier'
 				? await db.rpc('admin_set_foundation', { ...base, p_tier: pending.tier })
 				: await db.rpc(pending.revoke ? 'admin_revoke_badge' : 'admin_grant_badge', {
 						...base,
@@ -219,6 +242,12 @@
 					: `Set Foundation ${'★'.repeat(d.to)} for ${who}` + (d.from ? ` (was ${'★'.repeat(d.from)})` : '');
 			case 'message':
 				return `Sent a message to ${who}`;
+			case 'hide':
+				return `Hid ${who} from the leaderboards`;
+			case 'unhide':
+				return `Showed ${who} on the leaderboards again`;
+			case 'name_voucher':
+				return `Gave ${who} a name change voucher`;
 			default:
 				return `${a.action} on ${who}`;
 		}
@@ -273,7 +302,7 @@
 										{#each visible as p (p.user_id)}
 											<tr class:sel={p.user_id === selectedId} onclick={() => select(p.user_id)} onkeydown={(e) => e.key === 'Enter' && select(p.user_id)} tabindex="0">
 												<td>{#if p.active_badge_id}<span class="chip">{#if badgeIcon(p.active_badge_id)}<img class="bi" src={badgeIcon(p.active_badge_id)} alt="" onerror={hideBroken} />{/if}{badgeName(p.active_badge_id)}</span>{:else}<span class="muted">none</span>{/if}</td>
-												<td>{p.display_name}{#if p.name_flagged}<span class="flag" title="On the name blocklist: hidden from leaderboards">flagged</span>{/if}</td>
+												<td>{p.display_name}{#if p.name_flagged}<span class="flag" title="On the name blocklist: hidden from leaderboards">flagged</span>{/if}{#if p.admin_hidden}<span class="flag" title="Hidden from the leaderboards by you">hidden</span>{/if}{#if p.name_voucher}<span class="pill" title="Has a name change voucher">voucher</span>{/if}</td>
 												<td class="tag">{p.player_tag ?? ''}</td>
 												<td class="num">{fmtTime(p.time_played_ms)}</td>
 												<td>{fmtDate(p.created_at)}</td>
@@ -305,8 +334,21 @@
 									<dt>Playtime</dt><dd>{fmtTime(selected.time_played_ms)}</dd>
 									<dt>Solo</dt><dd>{num(selected.games_finished)} games · {num(selected.boards_finished)} boards</dd>
 									<dt>Foundation</dt><dd>{selected.foundation_tier ? 'Foundation ' + '★'.repeat(selected.foundation_tier) : 'no'}</dd>
+									<dt>Leaderboards</dt><dd>{selected.admin_hidden ? 'hidden by you' : selected.hide_from_leaderboards ? 'hidden (their choice)' : 'shown'}</dd>
+									<dt>Name change</dt><dd>{selected.name_voucher ? 'voucher ready' : selected.name_changed_at ? 'last ' + fmtDate(selected.name_changed_at) : 'never changed'}</dd>
 									<dt>Supporter</dt><dd>{selected.supporter_until && new Date(selected.supporter_until) > new Date() ? 'until ' + fmtDate(selected.supporter_until) : 'no'}</dd>
 								</dl>
+
+								<h3>Account</h3>
+								<div class="tiers">
+									{#if selected.admin_hidden}
+										<button aria-pressed={pending?.kind === 'unhide'} onclick={() => startAccount('unhide')}>Show on leaderboards</button>
+									{:else}
+										<button aria-pressed={pending?.kind === 'hide'} onclick={() => startAccount('hide')}>Hide from leaderboards</button>
+									{/if}
+									<button aria-pressed={pending?.kind === 'voucher'} onclick={() => startAccount('voucher')} disabled={selected.name_voucher} title={selected.name_voucher ? 'They already have one' : ''}>Name change voucher</button>
+									<button aria-pressed={pending?.kind === 'message'} onclick={() => startAccount('message')}>Send a message</button>
+								</div>
 
 								<h3>Granted by hand</h3>
 								<div class="badges">
@@ -346,7 +388,7 @@
 										<div class="seg" role="group" aria-label="Message">
 											<button aria-pressed={msgMode === 'template'} onclick={() => (msgMode = 'template')}>Template</button>
 											<button aria-pressed={msgMode === 'custom'} onclick={() => (msgMode = 'custom')}>Custom</button>
-											<button aria-pressed={msgMode === 'none'} onclick={() => (msgMode = 'none')}>Don't send</button>
+											{#if pending.kind !== 'message'}<button aria-pressed={msgMode === 'none'} onclick={() => (msgMode = 'none')}>Don't send</button>{/if}
 										</div>
 										{#if msgMode === 'template'}
 											<label for="tpl">Template</label>
@@ -368,18 +410,18 @@
 										{#if actionErr}<p class="err">{actionErr}</p>{/if}
 										{#if confirming}
 											<div class="confirm">
-												<span>{title}{message ? ' and send the message' : ''}?</span>
+												<span>{title}{message && pending.kind !== 'message' ? ' and send the message' : ''}?</span>
 												<div class="row">
 													<button class="btn" onclick={() => (confirming = false)} disabled={busy}>Back</button>
 													<button class="btn {pending.revoke ? 'danger' : 'primary'}" onclick={apply} disabled={busy}>
-														{busy ? 'Saving...' : pending.revoke ? 'Yes, revoke' : 'Yes, grant'}
+														{busy ? 'Saving...' : `Yes, ${verb.toLowerCase()}`}
 													</button>
 												</div>
 											</div>
 										{:else}
 											<div class="row">
 												<button class="btn" onclick={resetPending}>Cancel</button>
-												<button class="btn {pending.revoke ? 'danger' : 'primary'}" onclick={next}>{pending.revoke ? 'Revoke...' : 'Grant...'}</button>
+												<button class="btn {pending.revoke ? 'danger' : 'primary'}" onclick={next}>{verb}...</button>
 											</div>
 										{/if}
 									</div>
@@ -689,6 +731,10 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
+	}
+	.tiers button:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
 	}
 	.tiers button[aria-pressed='true'] {
 		background: var(--button-fill);
