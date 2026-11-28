@@ -15,7 +15,6 @@
 	let { data } = $props();
 
 	const PLAY_URL = 'https://play.shikaku.plus'; // → full Flutter web app
-	const VS_URL = 'https://vs.shikaku.plus';
 	// Homepage words live in src/lib/copy/home.txt (Kris edits them there).
 	const copy = parseCopy(homeCopy);
 	const t = (/** @type {string} */ k, fallback = '') => copy[k] || fallback;
@@ -24,8 +23,11 @@
 	// The description reuses the page's meta description word for word, so the
 	// copy stays Krischan's. Absolute URLs come from the request's origin, like
 	// the canonical tag, so they follow the landing page to shikaku.plus.
-	const DESCRIPTION =
-		'Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today.';
+	const DESCRIPTION = t(
+		'seo.description',
+		'Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today.'
+	);
+	const TITLE = t('seo.title', 'Shikaku+ — Complete squares with friends');
 	// Help Me! links (?seed=…) and ?support on shikaku.plus belong to the game.
 	const appLinkTarget = $derived(
 		page.url.hostname === 'shikaku.plus' &&
@@ -170,21 +172,12 @@
 		<!-- No-JavaScript fallback for Help Me! links; app.html handles everyone else. -->
 		<noscript><meta http-equiv="refresh" content={`0;url=${appLinkTarget}`} /></noscript>
 	{/if}
-	<title>Shikaku+ — Complete squares with friends</title>
-	<meta
-		name="description"
-		content="Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today."
-	/>
-	<meta property="og:title" content="Shikaku+ — Complete squares with friends" />
-	<meta
-		property="og:description"
-		content="Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today."
-	/>
-	<meta name="twitter:title" content="Shikaku+ — Complete squares with friends" />
-	<meta
-		name="twitter:description"
-		content="Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today."
-	/>
+	<title>{TITLE}</title>
+	<meta name="description" content={DESCRIPTION} />
+	<meta property="og:title" content={TITLE} />
+	<meta property="og:description" content={DESCRIPTION} />
+	<meta name="twitter:title" content={TITLE} />
+	<meta name="twitter:description" content={DESCRIPTION} />
 </svelte:head>
 
 <header class="topbar" class:visible={navVisible}>
@@ -196,11 +189,12 @@
 	<!-- Hero -->
 	<section class="hero" bind:this={heroSection}>
 		<div class="hero-text">
-			<h1 class="brand">Shikaku+</h1>
-			<p class="tagline">{t('hero.tagline', 'Complete squares with friends.')}</p>
+			<!-- The wordmark is the picture; the tagline is the page's H1 (its words come
+			     from home.txt, so the heading can carry the searches people make). -->
+			<p class="brand">Shikaku+</p>
+			<h1 class="tagline">{t('hero.tagline', 'Complete squares with friends.')}</h1>
 			<div class="hero-buttons">
 				<a class="play" href={PLAY_URL}>{t('hero.play', 'Play now')}</a>
-				<a class="play play-vs" href={VS_URL}>{t('hero.vs', 'Play VS')}</a>
 			</div>
 
 			{#if boardsSolved}
@@ -360,6 +354,9 @@
 		color: var(--text-primary);
 	}
 	.tagline {
+		font-family: var(--font-ui);
+		font-weight: normal;
+		line-height: 1.4;
 		font-size: 18px;
 		color: var(--text-secondary);
 		letter-spacing: -0.2px;
@@ -386,11 +383,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 8px;
-	}
-	.play-vs {
-		background: var(--chip-unsel-fill);
-		color: var(--text-primary);
-		padding: 14px 22px;
 	}
 	.hero-facts {
 		margin: 8px 0 0;

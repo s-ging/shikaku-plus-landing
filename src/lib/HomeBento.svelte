@@ -210,7 +210,8 @@
 		</div>
 	</section>
 
-	<!-- Foundation -->
+	<!-- Foundation (hidden unless home.txt says [foundation.show] yes) -->
+	{#if t('foundation.show', 'no').toLowerCase() === 'yes'}
 	<section id="foundation" class="card span-12 foundation split-12">
 		<div class="col f-left">
 			<div class="row wrap">
@@ -255,6 +256,8 @@
 			</div>
 		</div>
 	</section>
+
+	{/if}
 
 	<!-- About -->
 	<section class="card span-6">

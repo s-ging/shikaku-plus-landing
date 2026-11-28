@@ -13,16 +13,25 @@
 # The site updates about a minute after you save. Empty or missing = hidden
 # (or the built-in wording for buttons).
 
+# ─── Search engines ──────────────────────────────────────────────────────────
+# What Google shows for the homepage: the title (keep it under ~60 characters)
+# and the description (under ~155). Also used when the link is shared.
+
+[seo.title]
+Shikaku+ — Complete squares with friends
+
+[seo.description]
+Shikaku+ is a cooperative and competitive puzzle platform built on the Nikoli puzzle, Shikaku. Play Shikaku+ today.
+
 # ─── Hero ────────────────────────────────────────────────────────────────────
 
+# The tagline is the page's main heading (H1) for search engines: the
+# wordmark above it is the picture, this line is the words.
 [hero.tagline]
 Complete squares with friends.
 
 [hero.play]
 Play now
-
-[hero.vs]
-Play VS
 
 [hero.solved]
 puzzles solved by players worldwide
@@ -112,7 +121,8 @@ FULL crossplay and cross progression in the near future.
 Stuck? Send it to a friend.
 
 [help.body]
-On a 16×16 Brutal, you will get stuck. Help Me! turns your half-done board into a link. Your friend picks it up with Let Me Help!, places what they can, and passes it on. Every name it goes through stays with the board.
+On larger and harder boards, you're bound to get stuck. Help Me! changes that by getting your friends in the mix. Your friend picks up where you left off, and you'll see how they solved the puzzle so you're not left with a cliffhanger! Satisfaction guaranteed!
+
 
 [help.video]
 /media/help-me
@@ -127,9 +137,8 @@ On a 16×16 Brutal, you will get stuck. Help Me! turns your half-done board into
 Help Me! in action: a board passed between friends until it is solved
 
 [help.button]
-Try a 16×16 Brutal
+Play now
 
-# ─── Modes ───────────────────────────────────────────────────────────────────
 
 [modes.title]
 Modes
@@ -164,7 +173,7 @@ Standard | 3 Stock a round.
 Knockout | 1 Stock a round.
 
 [vs.plates]
-[Your rank plates]
+# Hidden for now (Kris, 2026-11-28). Put text back here to show the box.
 
 [vs.play]
 Play VS
@@ -189,6 +198,11 @@ Watch the full trailer →
 # ─── Foundation ──────────────────────────────────────────────────────────────
 # Payments are parked: the button goes to /support ("Coming soon" there).
 # Goal lines: "amount | what it unlocks", one per line.
+
+[foundation.show]
+# yes = show the Foundation section, no = hide it (Kris, 2026-11-28: hidden
+# until payments open).
+no
 
 [foundation.badge]
 Rerun
