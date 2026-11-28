@@ -112,20 +112,16 @@ Stuck? Send it to a friend.
 [help.body]
 On a 16×16 Brutal, you will get stuck. Help Me! turns your half-done board into a link. Your friend picks it up with Let Me Help!, places what they can, and passes it on. Every name it goes through stays with the board.
 
-[help.example.title]
-16×16 · Brutal · solved by 3 people
+[help.video]
+# The Help Me! clip: a path without extension, e.g. /media/help-me
+# (put help-me.webm, help-me.mp4 and help-me.jpg in static/media/). Empty = a
+# placeholder box.
 
-[help.example.tag]
-Example
+[help.video.placeholder]
+[Help Me! clip goes here]
 
-[help.example.1]
-You | 23 boxes, then Help Me!
-
-[help.example.2]
-A friend | 18 boxes, passed it on
-
-[help.example.3]
-Their friend | 11 boxes, solved it
+[help.video.label]
+Help Me! in action: a board passed between friends until it is solved
 
 [help.button]
 Try a 16×16 Brutal
@@ -173,29 +169,18 @@ Play VS
 [vs.learn]
 Learn how VS works
 
+[vs.video]
+# The VS clip (from the trailer at 1:00): a path without extension, e.g.
+# /media/vs-match (vs-match.webm, .mp4 and .jpg in static/media/).
+
+[vs.video.placeholder]
+[VS clip goes here]
+
+[vs.video.label]
+A Shikaku+ VS match
+
 [vs.video.title]
-Watch the VS beta trailer
-
-[vs.video.note]
-[Promo video goes here]
-
-[ascent.mark]
-[Shikaku+ ASCENT mark]
-
-[ascent.body]
-Open qualifier cups. Anyone can enter, with Supporter vouchers to win and a path to Summit.
-
-[ascent.date]
-[Next cup date] →
-
-[summit.mark]
-[Shikaku+ SUMMIT 27 mark]
-
-[summit.body]
-The grand prix championship. The best from Ascent meet to crown the Shikaku+ Summit champion.
-
-[summit.date]
-[2027 · dates] →
+Watch the full trailer →
 
 # ─── Foundation ──────────────────────────────────────────────────────────────
 # Payments are parked: the button goes to /support ("Coming soon" there).
@@ -283,7 +268,7 @@ Play Shikaku+ now!
 Get it on Google Play
 
 [get.browser]
-Play in your browser
+Play online
 
 # ─── Questions ───────────────────────────────────────────────────────────────
 # "Q: " starts a question, "A: " its answer. Add or remove pairs freely.

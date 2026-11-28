@@ -5,6 +5,7 @@
 	import copyText from '$lib/copy/home.txt?raw';
 	import { parseCopy, inline, blocks, pair, pairs, faqPairs } from '$lib/copy/parse.js';
 	import { PLAY_STORE_URL } from '$lib/jsonld.js';
+	import { lazyVideo } from '$lib/lazyVideo.js';
 	import tier1 from '$lib/assets/foundation-badges/f-tier-1.svg?raw';
 	import tier2 from '$lib/assets/foundation-badges/f-tier-2.svg?raw';
 	import tier3 from '$lib/assets/foundation-badges/f-tier-3.svg?raw';
@@ -21,7 +22,8 @@
 	/** Paragraphs and bullets, as HTML. */
 	const para = (/** @type {string} */ k) => blocks(t(k));
 
-	const roadmap = [1, 2, 3]
+	// As many roadmap items as home.txt has ([roadmap.1.title], [roadmap.2.title] …).
+	const roadmap = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 		.map((i) => ({
 			status: t(`roadmap.${i}.status`, 'planned').toLowerCase(),
 			label: t(`roadmap.${i}.label`),
@@ -30,16 +32,16 @@
 		}))
 		.filter((r) => r.title);
 
-	const helpColors = ['#d0b878', '#80b8b0', '#a090c0'];
-	const helpRows = [1, 2, 3].map((i) => pair(t(`help.example.${i}`))).filter(([who]) => who);
-	// Bar widths follow the box counts typed in the rows ("23 boxes …").
-	const helpCounts = helpRows.map(([, what]) => Number((/\d+/.exec(what) ?? ['1'])[0]) || 1);
-	const helpTotal = helpCounts.reduce((a, b) => a + b, 0);
+	// Clips: home.txt gives a path without extension, e.g. /media/help-me
+	// (files /media/help-me.webm, .mp4 and .jpg in static/). Empty = placeholder.
+	const helpVideo = t('help.video');
+	const vsVideo = t('vs.video');
 
 	const modes = [
 		{ key: 'modes.zen', cls: 'zen' },
 		{ key: 'modes.time_attack', cls: 'ta' },
-		{ key: 'modes.blitz', cls: 'blitz' }
+		{ key: 'modes.blitz', cls: 'blitz' },
+		{ key: 'modes.tekazu', cls: 'tekazu' }
 	]
 		.map((m) => ({ ...m, parts: pair(t(m.key)) }))
 		.filter((m) => m.parts[0]);
@@ -92,27 +94,11 @@
 	<section id="help" class="card span-7">
 		<h2 class="h2">{t('help.title')}</h2>
 		<div class="body">{@html para('help.body')}</div>
-		{#if helpRows.length}
-			<div class="example">
-				<div class="row small between">
-					<span>{t('help.example.title')}</span>
-					<span class="muted">{t('help.example.tag')}</span>
-				</div>
-				<div class="bar" aria-hidden="true">
-					{#each helpCounts as n, i (i)}
-						<div style="width: {(n / helpTotal) * 100}%; background: {helpColors[i]}"></div>
-					{/each}
-				</div>
-				<div class="stack-8 small">
-					{#each helpRows as [who, what], i (i)}
-						<div class="row">
-							<span class="dot" style="background: {helpColors[i]}" aria-hidden="true"></span>
-							<span class="grow">{who}</span>
-							<span class="muted">{what}</span>
-						</div>
-					{/each}
-				</div>
-			</div>
+		{#if helpVideo}
+			<!-- svelte-ignore a11y_media_has_caption -->
+			<video class="clip" use:lazyVideo={helpVideo} poster="{helpVideo}.jpg" muted loop playsinline aria-label={t('help.video.label', 'Help Me! in action')}></video>
+		{:else}
+			<div class="placeholder clip-placeholder"><span class="muted">{t('help.video.placeholder', '[Help Me! clip]')}</span></div>
 		{/if}
 		{#if t('help.button')}<a class="btn btn-gold self-start" href={PLAY_URL}>{t('help.button')}</a>{/if}
 	</section>
@@ -155,22 +141,14 @@
 					<a class="btn btn-dark" href="{VS_URL}/learn">{t('vs.learn', 'Learn how VS works')}</a>
 				</div>
 			</div>
-			<a class="trailer" href={TRAILER_URL}>
-				<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#a090c0" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M10 8l6 4-6 4z"></path></svg>
-				<span>{t('vs.video.title', 'Watch the VS beta trailer')}</span>
-				{#if t('vs.video.note')}<span class="muted small">{t('vs.video.note')}</span>{/if}
-			</a>
-		</div>
-		<div class="split-2 events">
-			<div class="event ascent">
-				<div class="event-mark"><span>{t('ascent.mark')}</span></div>
-				<p class="muted">{t('ascent.body')}</p>
-				<span class="small event-date">{t('ascent.date')}</span>
-			</div>
-			<div class="event summit">
-				<div class="event-mark"><span>{t('summit.mark')}</span></div>
-				<p class="muted">{t('summit.body')}</p>
-				<span class="small event-date">{t('summit.date')}</span>
+			<div class="vs-right">
+				{#if vsVideo}
+					<!-- svelte-ignore a11y_media_has_caption -->
+					<video class="clip" use:lazyVideo={vsVideo} poster="{vsVideo}.jpg" muted loop playsinline aria-label={t('vs.video.label', 'A Shikaku+ VS match')}></video>
+				{:else}
+					<div class="placeholder clip-placeholder violet-dash"><span class="muted">{t('vs.video.placeholder', '[VS clip]')}</span></div>
+				{/if}
+				{#if t('vs.video.title')}<a class="trailer-link" href={TRAILER_URL}>{t('vs.video.title')}</a>{/if}
 			</div>
 		</div>
 	</section>
@@ -237,8 +215,13 @@
 	<!-- Get it -->
 	<section id="get" class="card span-4">
 		<h2 class="h2 tight">{t('get.title')}</h2>
-		<a class="btn btn-gold block" href={PLAY_STORE_URL}>{t('get.android', 'Get it on Google Play')}</a>
-		<a class="btn btn-dark block" href={PLAY_URL}>{t('get.browser', 'Play in your browser')}</a>
+		<!-- Google's official badge, unaltered (brand rules), beside a button of the same size. -->
+		<div class="get-row">
+			<a class="store-badge" href={PLAY_STORE_URL}>
+				<img src="/badges/google-play.svg" alt={t('get.android', 'Get it on Google Play')} width="150" height="45" />
+			</a>
+			<a class="btn-outline" href={PLAY_URL}>{t('get.browser', 'Play online')}</a>
+		</div>
 	</section>
 
 	<!-- Questions -->
@@ -340,11 +323,11 @@
 	.btn-violet { background: #a090c0; color: #1b1b1b; }
 	.btn-dark { background: var(--chip-unsel-fill); color: var(--text-primary); }
 	.btn:hover { filter: brightness(1.08); }
-	.btn:focus-visible, .mode:focus-visible, .trailer:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; }
+	.btn:focus-visible, .mode:focus-visible, .trailer-link:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; }
 	.example { background: var(--bg); border-radius: var(--radius); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
 	.bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; gap: 2px; }
 	.dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-	.modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+	.modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 	.mode {
 		border-radius: var(--radius);
 		padding: 10px;
@@ -362,6 +345,7 @@
 	.zen { background: #d0b878; border: 2px solid #655733; }
 	.ta { background: #d08080; border: 2px solid #773535; }
 	.blitz { background: #8098b0; border: 2px solid #364a5f; }
+	.tekazu { background: #88b098; border: 2px solid #2a6341; }
 	.vs-card { border-color: rgba(160, 144, 192, 0.45); padding: 20px; gap: 20px; }
 	.vs-left { grid-column: span 5; gap: 14px; }
 	.vs-mark { margin: 0; }
@@ -371,32 +355,28 @@
 	.vs-mode { background: var(--chip-unsel-fill); border-radius: var(--radius); padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
 	.placeholder { flex: 1; min-height: 96px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; padding: 12px; font-size: 14px; }
 	.violet-dash { border: 2px dashed #5b4e76; }
-	.trailer {
-		grid-column: span 7;
-		align-self: center;
-		aspect-ratio: 16 / 9;
-		background: color-mix(in srgb, var(--text-primary) 3%, var(--bg));
-		border: 2px solid #5b4e76;
-		border-radius: var(--radius);
-		display: flex;
-		flex-direction: column;
+	.vs-right { grid-column: span 7; align-self: center; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+	.clip { display: block; width: 100%; height: auto; border-radius: var(--radius); background: #000; }
+	.vs-right .clip { border: 2px solid #5b4e76; box-sizing: border-box; aspect-ratio: 16 / 9; object-fit: cover; }
+	.clip-placeholder { aspect-ratio: 16 / 9; flex: none; border: 2px dashed color-mix(in srgb, var(--text-primary) 20%, transparent); }
+	.trailer-link { font-size: 14px; color: #a090c0; text-decoration: none; align-self: flex-start; }
+	.trailer-link:hover { text-decoration: underline; }
+	.get-row { display: flex; flex-wrap: nowrap; gap: 10px; align-items: center; }
+	.store-badge, .btn-outline { flex: 0 0 auto; width: 150px; height: 45px; box-sizing: border-box; }
+	.store-badge img { display: block; width: 150px; height: 45px; }
+	.btn-outline {
+		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		gap: 10px;
+		border: 2px solid var(--button-fill);
+		border-radius: 5px;
+		color: var(--button-fill);
 		text-decoration: none;
-		color: var(--text-primary);
-		min-width: 0;
+		font-family: var(--font-ui);
 		font-size: 15px;
 	}
-	.events { gap: 12px; }
-	.event { background: color-mix(in srgb, var(--text-primary) 3%, var(--bg)); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; font-size: 14px; line-height: 1.55; }
-	.event-mark { height: 64px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 13px; }
-	.ascent { border: 1px solid rgba(197, 149, 107, 0.5); }
-	.ascent .event-mark { border: 1px dashed rgba(197, 149, 107, 0.6); color: #c5956b; }
-	.ascent .event-date { color: #c5956b; }
-	.summit { border: 1px solid rgba(208, 184, 120, 0.55); }
-	.summit .event-mark { border: 1px dashed rgba(208, 184, 120, 0.6); color: var(--button-fill); }
-	.summit .event-date { color: var(--button-fill); }
+	.btn-outline:hover { background: color-mix(in srgb, var(--button-fill) 12%, transparent); }
+	.store-badge:focus-visible, .btn-outline:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; }
 	.foundation { background: color-mix(in srgb, var(--button-fill) 6%, transparent); border-color: color-mix(in srgb, var(--button-fill) 50%, transparent); padding: 20px; display: grid; }
 	.f-left { grid-column: span 7; gap: 14px; }
 	.f-right { grid-column: span 5; gap: 14px; }

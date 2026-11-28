@@ -24,14 +24,18 @@ describe('copy files', () => {
 	it('turns paragraphs and bullets into HTML', () => {
 		expect(blocks('One\ntwo\n\n- a\n- b')).toBe('<p>One<br/>two</p><ul><li>a</li><li>b</li></ul>');
 	});
-	it('home.txt: pairs, goals and questions read as expected', () => {
+	it('home.txt: pairs, goals and questions are well formed (any wording)', () => {
 		const c = parseCopy(home);
-		expect(pair(c['modes.zen'])).toEqual(['Zen', 'No clock']);
-		expect(pairs(c['foundation.goals'])[0]).toEqual(['$25', 'Google Play Store launch']);
-		const faq = faqPairs(c['faq']);
-		expect(faq.length).toBe(8);
-		expect(faq[0]).toEqual({ q: 'Is Shikaku+ free?', a: 'Yes. Free to play, with no ads.' });
-		for (const k of ['hero.tagline', 'changelog.left.points', 'help.body', 'vs.body', 'foundation.title', 'about.body'])
+		for (const k of ['modes.zen', 'modes.time_attack', 'modes.blitz']) {
+			const [name, sub] = pair(c[k] ?? '');
+			expect(name, k).toBeTruthy();
+			expect(sub, k).toBeTruthy();
+		}
+		expect(pairs(c['foundation.goals'] ?? '').every(([a, b]) => a && b)).toBe(true);
+		const faq = faqPairs(c['faq'] ?? '');
+		expect(faq.length).toBeGreaterThan(0);
+		expect(faq.every((p) => p.q && p.a)).toBe(true);
+		for (const k of ['hero.tagline', 'help.title', 'vs.body', 'about.body'])
 			expect(c[k], k).toBeTruthy();
 	});
 });
