@@ -5,7 +5,12 @@
 	// factor and log each change; this page holds no key of its own.
 	// Design: shikaku-plus-info project/admin-panel-2026-11-26.md.
 	import MfaGate from '$lib/admin/MfaGate.svelte';
-	import { HAND_BADGES, EARNED_BADGES, TEMPLATES, LIMITS, badgeName, fill } from '$lib/admin/catalog.js';
+	import { HAND_BADGES, EARNED_BADGES, TEMPLATES, LIMITS, badgeName, badgeIcon, tierIcon, fill } from '$lib/admin/catalog.js';
+
+	/** A picture that couldn't load hides itself: the name still shows. */
+	function hideBroken(/** @type {Event} */ e) {
+		/** @type {HTMLElement} */ (e.currentTarget).style.display = 'none';
+	}
 
 	let { data } = $props();
 	// Only used once data.supabase is known to be set (see the markup).
@@ -267,7 +272,7 @@
 									<tbody>
 										{#each visible as p (p.user_id)}
 											<tr class:sel={p.user_id === selectedId} onclick={() => select(p.user_id)} onkeydown={(e) => e.key === 'Enter' && select(p.user_id)} tabindex="0">
-												<td>{#if p.active_badge_id}<span class="chip">{badgeName(p.active_badge_id)}</span>{:else}<span class="muted">none</span>{/if}</td>
+												<td>{#if p.active_badge_id}<span class="chip">{#if badgeIcon(p.active_badge_id)}<img class="bi" src={badgeIcon(p.active_badge_id)} alt="" onerror={hideBroken} />{/if}{badgeName(p.active_badge_id)}</span>{:else}<span class="muted">none</span>{/if}</td>
 												<td>{p.display_name}{#if p.name_flagged}<span class="flag" title="On the name blocklist: hidden from leaderboards">flagged</span>{/if}</td>
 												<td class="tag">{p.player_tag ?? ''}</td>
 												<td class="num">{fmtTime(p.time_played_ms)}</td>
@@ -307,7 +312,7 @@
 								<div class="badges">
 									{#each HAND_BADGES as b (b.id)}
 										<button class="badge" class:owned={selected.badges.includes(b.id)} aria-pressed={pending?.kind === 'badge' && pending.badge === b.id} onclick={() => startBadge(b.id)}>
-											<span>{b.name}</span>{#if selected.badges.includes(b.id)}<span class="tick">✓</span>{/if}
+											<span class="bname">{#if badgeIcon(b.id)}<img class="bi big" src={badgeIcon(b.id)} alt="" onerror={hideBroken} />{/if}<span>{b.name}</span></span>{#if selected.badges.includes(b.id)}<span class="tick">✓</span>{/if}
 										</button>
 									{/each}
 								</div>
@@ -316,7 +321,7 @@
 								<div class="tiers">
 									{#each [0, 1, 2, 3, 4] as n (n)}
 										<button aria-pressed={(pending?.kind === 'tier' ? pending.tier : selected.foundation_tier) === n} onclick={() => startTier(n)}>
-											{n ? '★'.repeat(n) : 'None'}
+											{#if tierIcon(n)}<img class="bi" src={tierIcon(n)} alt="" onerror={hideBroken} />{/if}{n ? '★'.repeat(n) : 'None'}
 										</button>
 									{/each}
 								</div>
@@ -324,7 +329,7 @@
 								<h3>Earned by playing</h3>
 								<div class="earned">
 									{#each selected.badges.filter((id) => id in EARNED_BADGES) as id (id)}
-										<span class="chip">{badgeName(id)}</span>
+										<span class="chip">{#if badgeIcon(id)}<img class="bi" src={badgeIcon(id)} alt="" onerror={hideBroken} />{/if}{badgeName(id)}</span>
 									{:else}
 										<span class="muted">None yet</span>
 									{/each}
@@ -333,7 +338,7 @@
 
 								{#if pending}
 									<div class="action">
-										<strong>{title}</strong>
+										<strong class="atitle">{#if pending.kind === 'badge' && badgeIcon(pending.badge)}<img class="bi mid" src={badgeIcon(pending.badge)} alt="" onerror={hideBroken} />{:else if pending.kind === 'tier' && tierIcon(pending.tier ?? 0)}<img class="bi mid" src={tierIcon(pending.tier ?? 0)} alt="" onerror={hideBroken} />{/if}{title}</strong>
 										<label for="reason">Reason (kept in the Activity log; the player doesn't see it)</label>
 										<input id="reason" bind:value={reason} maxlength={LIMITS.reason} placeholder="e.g. Reported the 12×12 save bug" />
 
@@ -545,6 +550,31 @@
 	.tag {
 		font-family: 'Inconsolata', ui-monospace, Menlo, Consolas, monospace;
 		letter-spacing: 0.04em;
+	}
+	/* Badge pictures, the app's SVGs: small like next to a name in the app,
+	   big on the grant buttons (Krischan, 2026-11-28). */
+	.bi {
+		width: 18px;
+		height: 18px;
+		object-fit: contain;
+		vertical-align: -4px;
+		margin-right: 6px;
+		flex: none;
+	}
+	.bi.mid {
+		width: 28px;
+		height: 28px;
+		vertical-align: -8px;
+	}
+	.bi.big {
+		width: 40px;
+		height: 40px;
+		margin-right: 10px;
+	}
+	.bname {
+		display: flex;
+		align-items: center;
+		min-width: 0;
 	}
 	.chip {
 		display: inline-block;

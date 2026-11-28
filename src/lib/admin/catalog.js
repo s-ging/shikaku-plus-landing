@@ -46,6 +46,22 @@ export const EARNED_BADGES = {
 	tekazu_500: 'Tekazu Master'
 };
 
+/**
+ * A badge's picture: the app's own art (app assets/images/badges), copied to
+ * static/admin/badges (Krischan, 2026-11-28). A badge added to the app needs
+ * its SVG copied there too; until then it shows by name only.
+ * @param {string | null | undefined} id
+ */
+export function badgeIcon(id) {
+	if (!id || !(HAND_BADGES.some((b) => b.id === id) || id in EARNED_BADGES)) return null;
+	return `/admin/badges/${id.replaceAll('_', '-')}.svg`;
+}
+
+/** A Foundation tier's picture (1–4). @param {number} n */
+export function tierIcon(n) {
+	return n >= 1 && n <= 4 ? `/admin/badges/foundation-${n}.svg` : null;
+}
+
 /** @param {string | null | undefined} id */
 export function badgeName(id) {
 	if (!id) return '';
